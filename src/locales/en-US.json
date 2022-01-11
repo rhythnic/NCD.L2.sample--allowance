@@ -1,0 +1,54 @@
+{
+  "actions": {
+    "cancel": "Cancel",
+    "create": "Create",
+    "add": "Add",
+    "delete": "Delete",
+    "set": "Set",
+    "transfer": "Transfer",
+    "transferMoney": "Transfer Money"
+  },
+  "fund": {
+    "funds": "Funds",
+    "subaccount": "Subaccount",
+    "create": "Create Fund",
+    "noFundsPrompt": "Create a fund to start managing money for one or more members.",
+    "loading": "Loading funds",
+    "setUnrestrictedBalance": "Set Unrestricted Balance"
+  },
+  "account": {
+    "id": "Account ID | Account IDs",
+    "balance": "Balance",
+    "initialBalance": "Initial Balance",
+    "sameInitialBalance": "Applies to all accounts being added.",
+    "idsToAdd": "Account IDs to add",
+    "decreaseBalance": "",
+    "recipient": "Recipient",
+    "amount": "Amount"
+  },
+  "payer": {
+    "payer": "Payer | Payers",
+    "add": "Add Payers",
+    "remove": "Remove Payers",
+    "setBalance": "Set Payer Balance"
+  },
+  "payee": {
+    "payee": "Payee | Payees",
+    "add": "Add Payees",
+    "remove": "Remove Payees",
+    "setBalance": "Set Payee Balance"
+  },
+  "wallet": {
+    "accountId": "Account ID",
+    "signIn": "Sign in with NEAR Wallet",
+    "signOut": "Sign out",
+    "signInPrompt": "Sign in to view your funds."
+  },
+  "nav": {
+    "settings": "Settings",
+    "learn": "Learn"
+  },
+  "i18n": {
+    "language": "Language"
+  }
+}
