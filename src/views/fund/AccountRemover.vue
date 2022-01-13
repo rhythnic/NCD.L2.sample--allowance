@@ -3,7 +3,7 @@
   import DeleteButton from "@/components/DeleteButton.vue";
   import ActionDialog from "@/components/ActionDialog.vue";
   import { useDialog } from "@/composables/ui";
-  import { PromiseTracker } from "@/models/PromiseTracker";
+  import { PromiseTracker } from "@/models/promise-tracker";
 
   const props = defineProps<{
     title: string;

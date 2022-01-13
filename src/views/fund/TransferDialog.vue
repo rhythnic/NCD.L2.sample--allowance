@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  import { reactive, watch } from 'vue';
+  import { reactive, watch } from "vue";
   import { useI18n } from "vue-i18n";
   import ActionDialog from "@/components/ActionDialog.vue";
-  import { PromiseTracker } from "@/models/PromiseTracker";
-  import TextField from '@/components/TextField.vue';
-  import { Fund } from '@/models/blockchain';
+  import { PromiseTracker } from "@/models/promise-tracker";
+  import TextField from "@/components/TextField.vue";
+  import { FundContract } from "@/models/fund";
 
   const { t } = useI18n({
     useScope: "global",
@@ -12,19 +12,19 @@
   });
 
   const props = defineProps<{
-    fund: Fund;
+    fund: FundContract;
     isOpen: boolean;
     recipient?: string;
   }>();
 
   const emit = defineEmits<{
-    (e: 'close'): void
+    (e: "close"): void;
   }>();
 
   const defaultState = () => ({
-      recipient: props.recipient || '',
-      amount: ''
-  })
+    recipient: props.recipient || "",
+    amount: "",
+  });
 
   const state = reactive(defaultState());
   const status = new PromiseTracker();
@@ -32,7 +32,7 @@
   async function handleConfirm() {
     await status.track(props.fund.transfer(state.recipient, state.amount));
     if (status.succeeded) {
-      emit('close');
+      emit("close");
     }
   }
 
@@ -40,8 +40,8 @@
     () => props.isOpen,
     () => {
       Object.assign(state, defaultState());
-    }
-  )
+    },
+  );
 </script>
 
 <template>

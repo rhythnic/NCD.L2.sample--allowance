@@ -16,7 +16,7 @@ export default defineConfig({
     },
   },
   define: {
-    // process.env used in borsh (near-api-js)
     "process.env": {},
+    global: {},
   },
 });

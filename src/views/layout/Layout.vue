@@ -1,15 +1,33 @@
 <script setup lang="ts">
+  import { inject } from "vue";
+  import {
+    onBeforeRouteUpdate,
+    RouteLocationNormalized,
+    useRoute,
+    useRouter,
+  } from "vue-router";
+  import { Wallet } from "@/models/wallet";
   import Header from "./Header.vue";
-  import TxResultAlert from "./TxResultAlert.vue";
-  import BlockchainProvider from "./NearProvider.vue";
+
+  const wallet = inject("wallet") as Wallet;
+
+  const router = useRouter();
+  const route = useRoute();
+
+  redirectUnauthorizedUsers(route);
+  onBeforeRouteUpdate(redirectUnauthorizedUsers);
+
+  function redirectUnauthorizedUsers(to: RouteLocationNormalized) {
+    const homePath = `/${to.params.locale}`;
+    if (to.path !== homePath && !wallet.isSignedIn()) {
+      router.replace({ path: homePath });
+    }
+  }
 </script>
 
 <template>
-  <BlockchainProvider>
-    <Header />
-    <main class="grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <router-view></router-view>
-    </main>
-    <TxResultAlert />
-  </BlockchainProvider>
+  <Header />
+  <main class="grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <router-view></router-view>
+  </main>
 </template>

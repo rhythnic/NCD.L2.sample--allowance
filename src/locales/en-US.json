@@ -1,5 +1,10 @@
 {
+  "app": {
+    "title": "Allowance",
+    "transactionSucceeded": "Transaction Succeeded"
+  },
   "actions": {
+    "confirm": "Confirm",
     "cancel": "Cancel",
     "create": "Create",
     "add": "Add",
@@ -9,12 +14,17 @@
     "transferMoney": "Transfer Money"
   },
   "fund": {
-    "funds": "Funds",
+    "managedFunds": "Managed Funds",
+    "balance": "Fund balance",
+    "availableBalance": "Availalbe Balance",
+    "unrestrictedBalance": "Unrestricted Balance",
     "subaccount": "Subaccount",
+    "owner": "Owner",
     "create": "Create Fund",
     "noFundsPrompt": "Create a fund to start managing money for one or more members.",
     "loading": "Loading funds",
-    "setUnrestrictedBalance": "Set Unrestricted Balance"
+    "setUnrestrictedBalance": "Set Unrestricted Balance",
+    "addMoney": "Add Money to Fund"
   },
   "account": {
     "id": "Account ID | Account IDs",
@@ -40,9 +50,10 @@
   },
   "wallet": {
     "accountId": "Account ID",
-    "signIn": "Sign in with NEAR Wallet",
+    "signIn": "Sign In",
     "signOut": "Sign out",
-    "signInPrompt": "Sign in to view your funds."
+    "signInPrompt": "Sign in to get started",
+    "supported": "Supported Wallets"
   },
   "nav": {
     "settings": "Settings",

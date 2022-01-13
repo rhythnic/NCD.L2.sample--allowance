@@ -13,7 +13,7 @@
     "@heroicons/vue": "^1.0.5",
     "bn.js": "^5.2.0",
     "buffer": "^6.0.3",
-    "near-api-js": "../../near/near-api-js/",
+    "near-api-js": "^0.44.2",
     "vue": "^3.2.25",
     "vue-i18n": "^9.2.0-beta.26",
     "vue-router": "^4.0.12"
@@ -32,6 +32,7 @@
     "express": "^4.17.2",
     "postcss": "^8.4.5",
     "prettier": "^2.5.1",
+    "sass": "^1.47.0",
     "tailwindcss": "^3.0.5",
     "typescript": "^4.4.4",
     "vite": "^2.7.2",

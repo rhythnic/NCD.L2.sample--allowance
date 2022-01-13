@@ -1,69 +1,62 @@
 <script setup lang="ts">
-  import { reactive, onMounted } from "vue";
-  import { useI18n } from "vue-i18n";
-  import BalanceDialog from "@/components/BalanceDialog.vue";
-  import { PromiseTracker } from "@/models/PromiseTracker";
-  import { Fund } from "@/models/blockchain";
-  import TransferButton from "@/components/TransferButton.vue";
-
-  const { t } = useI18n({
-    useScope: "global",
-    inheritLocale: true,
-  });
+  import { computed } from "vue";
 
   const props = defineProps<{
-    isPayer: boolean;
-    fund: Fund;
-    accountId: string;
+    label?: string;
+    accountId?: string;
     editMode: boolean;
-    userIsOwner: boolean;
+    modelValue: string[];
   }>();
 
   const emit = defineEmits<{
-    (e: "show-transfer", accountId: string): void;
+    (e: "update:modelValue", selected: string[]): void;
   }>();
 
-  const state = reactive({ balance: "0" });
-  const loadStatus = new PromiseTracker();
-  const setBalanceStatus = new PromiseTracker();
-
-  onMounted(async () => {
-    const result = await loadStatus.track(
-      props.isPayer
-        ? props.fund.getPayer(props.accountId)
-        : props.fund.getPayee(props.accountId),
-    );
-    Object.assign(state, result);
+  const selectedAccounts = computed({
+    get() {
+      return props.modelValue;
+    },
+    set(value: string[]) {
+      console.log("set", value);
+      emit("update:modelValue", value);
+    },
   });
-
-  function handleSetBalance(balance: string) {
-    const promise = props.isPayer
-      ? props.fund.setPayerBalance(props.accountId, balance)
-      : props.fund.setPayeeBalance(props.accountId, balance);
-    setBalanceStatus.track(promise);
-  }
 </script>
 
 <template>
-  <div class="flex items-center justify-between flex-1 h-10">
-    <div class="ml-3 text-sm">
-      <span class="font-medium text-gray-700">
-        {{ accountId }}
+  <li class="flex flex-wrap items-center pl-4 py-2">
+    <!-- Checkbox -->
+    <div v-if="editMode" class="mr-4">
+      <input
+        v-model="selectedAccounts"
+        :value="accountId"
+        type="checkbox"
+        class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded mt-0"
+      />
+    </div>
+    <!-- END Checkbox -->
+    <!-- Label -->
+    <div class="py-2 text-sm flex-auto sm:basis-auto">
+      <span class="font-medium text-gray-600">
+        {{ label || accountId }}
       </span>
     </div>
-    <template v-if="!editMode">
-      <div v-if="!isPayer" class="flex justify-center">
-        <TransferButton @click="emit('show-transfer', accountId)" />
+    <!-- END Label -->
+    <div
+      v-if="!editMode"
+      class="flex justify-end mt-2 sm:mt-0 flex-1 sm:flex-0"
+    >
+      <!-- Transfer Button -->
+      <div class="mr-4 sm:mr-16">
+        <slot name="transfer-button"></slot>
       </div>
-      <div class="ml-6">
-        <BalanceDialog
-          :balance="state.balance"
-          :show-actions="userIsOwner"
-          :promise-tracker="setBalanceStatus"
-          :title="t(isPayer ? 'payer.setBalance' : 'payer.setBalance')"
-          @set-balance="handleSetBalance"
-        />
+      <!-- END Transfer Button -->
+
+      <!-- AmountWidget -->
+      <div class="mx-2">
+        <slot></slot>
       </div>
-    </template>
-  </div>
+      <!-- END Amount Widet -->
+    </div>
+  </li>
 </template>

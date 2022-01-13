@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { inject } from "vue";
   import { useI18n } from "vue-i18n";
   import { useRouter, useRoute } from "vue-router";
   import {
@@ -13,40 +14,43 @@
   } from "@headlessui/vue";
   import { MenuIcon, XIcon } from "@heroicons/vue/outline";
   import { ChevronDownIcon } from "@heroicons/vue/solid";
-  import { useAuth, signOut, signIn } from "@/composables/auth";
+  import { Wallet } from "@/models/wallet";
   import { supportedLanguages } from "@/i18n";
   import SignInButton from "@/components/SignInButton.vue";
   import LocaleSelect from "@/components/LocaleSelect.vue";
 
-  const { accountId, isSignedIn } = useAuth();
-  const router = useRouter();
-  const route = useRoute();
-  const selectedLocale = route.params.locale as string | undefined;
+  const contractId = inject("contractId") as string;
+  const wallet = inject("wallet") as Wallet;
 
   const { t } = useI18n({
     useScope: "global",
     inheritLocale: true,
   });
 
-  const title = import.meta.env.VITE_APP_TITLE as string;
-
   const navigation = [{ name: "nav.learn", href: "#" }];
 
   const userNavigation = [{ name: "nav.settings", href: "#" }];
 
+  const accountId = wallet.getAccountId();
+  const router = useRouter();
+  const route = useRoute();
+
   function handleSignOut(): void {
-    signOut();
+    wallet.signOut();
     router.push({ name: "home", params: { locale: route.params.locale } });
   }
 
   function handleLocaleSelect(locale: string): void {
     router.push({ ...route, params: { ...route.params, locale } });
   }
+
+  function signIn() {
+    wallet.requestSignIn({ contractId });
+  }
 </script>
 
 <template>
-  <header>
-    <Popover class="relative">
+    <Popover as="header" class="relative">
       <div
         class="flex justify-between items-center max-w-7xl mx-auto px-4 py-6 sm:px-6 md:justify-start md:space-x-10 lg:px-8"
       >
@@ -56,7 +60,7 @@
             class="flex items-center"
           >
             <img src="@/assets/logo.png" class="w-16 h-16" />
-            {{ title }}
+            {{ t("app.title") }}
           </router-link>
         </div>
         <div class="-mr-2 -my-2 md:hidden">
@@ -142,13 +146,13 @@
                 </MenuItems>
               </transition>
             </Menu>
-            <SignInButton v-else @click="signIn" :text="t('wallet.signIn')" />
+            <SignInButton v-else />
           </div>
           <LocaleSelect
-            v-if="selectedLocale"
+            v-if="route.params.locale"
             class="ml-6"
             :languages="supportedLanguages"
-            :selected-locale="selectedLocale"
+            :selected-locale="route.params.locale as string"
             @select="handleLocaleSelect"
           />
         </div>
@@ -185,7 +189,10 @@
               </div>
             </div>
             <div class="py-6 px-5">
-              <div v-if="isSignedIn" class="grid grid-cols-2 gap-4 mb-6">
+              <div
+                v-if="wallet.isSignedIn()"
+                class="grid grid-cols-2 gap-4 mb-6"
+              >
                 <a
                   v-for="item in userNavigation"
                   :key="item.name"
@@ -203,18 +210,14 @@
                 >
                   {{ t("wallet.signOut") }}
                 </button>
-                <SignInButton
-                  v-else
-                  @click="signIn"
-                  :text="t('wallet.signIn')"
-                />
+                <SignInButton v-else :long="true" @click="signIn" />
               </div>
-              <hr v-if="isSignedIn" />
+              <hr v-if="wallet.isSignedIn()" />
               <LocaleSelect
-                v-if="selectedLocale"
+                v-if="route.params.locale"
                 class="mt-4 mb-6"
                 :languages="supportedLanguages"
-                :selected-locale="selectedLocale"
+                :selected-locale="route.params.locale as string"
                 @select="handleLocaleSelect"
               />
               <div class="mt-8 grid grid-cols-2 gap-4 pl-1">
@@ -232,5 +235,4 @@
         </PopoverPanel>
       </transition>
     </Popover>
-  </header>
 </template>

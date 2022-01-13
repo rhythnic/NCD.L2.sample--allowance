@@ -1,39 +1,42 @@
 <script setup lang="ts">
-  import { inject, computed, reactive, onMounted } from "vue";
+  import { inject, computed, onMounted, ref, watch } from "vue";
   import { useRoute } from "vue-router";
-  import AccountList from "@/views/fund/AccountList.vue";
+  import { buildFundContractType, UserRole } from "@/models/fund";
+  import { PromiseTracker } from "@/models/promise-tracker";
+  import { Wallet } from "@/models/wallet";
+  import AccountList from "./AccountList.vue";
   import FundCard from "./FundCard.vue";
-  import { useAuthState } from "@/composables/auth";
-  import { Fund, UserRole } from "@/models/blockchain";
-  import { PromiseTracker } from "@/models/PromiseTracker";
+
+  const wallet = inject("wallet") as Wallet;
+  const buildFundContract = inject(
+    "buildFundContract",
+  ) as buildFundContractType;
 
   const route = useRoute();
-  const fundFactory = inject("fundFactory") as (subaccount: string) => Fund;
-  const fund = fundFactory(route.params.subaccount as string);
-  const { accountId } = useAuthState();
+  const accountId = wallet.getAccountId();
   const loadStatus = new PromiseTracker();
   const createPayersStatus = new PromiseTracker();
   const createPayeesStatus = new PromiseTracker();
   const deletePayersStatus = new PromiseTracker();
   const deletePayeesStatus = new PromiseTracker();
   const setBalanceStatus = new PromiseTracker();
+  const owner = ref("");
+  const unrestrictedBalance = ref("");
+  const payerIndex = ref([]);
+  const payeeIndex = ref([]);
 
-  const state = reactive({
-    owner: "",
-    unrestricted_balance: "",
-    payerIndex: [],
-    payeeIndex: [],
-  });
+  const userIsOwner = computed(() => owner.value === accountId);
 
-  const userIsOwner = computed(() => state.owner === accountId.value);
+  const fund = buildFundContract(route.params.subaccount as string);
 
   onMounted(async () => {
-    const [core, payerIndex, payeeIndex] = await loadStatus.track(
+    const [core, _payerIndex, _payeeIndex] = await loadStatus.track(
       Promise.all([fund.getFund(), fund.getPayers(), fund.getPayees()]),
     );
-    Object.assign(state, core);
-    state.payerIndex = payerIndex;
-    state.payeeIndex = payeeIndex;
+    owner.value = core.owner;
+    unrestrictedBalance.value = core.unrestricted_balance;
+    payerIndex.value = _payerIndex;
+    payeeIndex.value = _payeeIndex;
   });
 
   function handleCreatePayers(accountIds: string[], balance: string): void {
@@ -51,6 +54,8 @@
   function handleDeletePayees(accountIds: string[]): void {
     deletePayeesStatus.track(fund.deletePayees(accountIds));
   }
+
+  watch(() => payerIndex.value, console.log);
 </script>
 
 <template>
@@ -59,33 +64,38 @@
   >
     <FundCard
       class="lg:col-start-1 lg:col-span-2"
-      v-bind="state"
       :fund="fund"
+      :owner="owner"
+      :unrestricted-balance="unrestrictedBalance"
       :user-is-owner="userIsOwner"
     />
-    <AccountList
-      :role="UserRole.Payer"
-      class="lg:col-start-1 lg:col-span-1"
-      :title="'Payers'"
-      :accountIds="state.payerIndex"
-      :fund="fund"
-      :user-is-owner="userIsOwner"
-      :add-status="createPayersStatus"
-      :remove-status="deletePayersStatus"
-      @add-accounts="handleCreatePayers"
-      @remove-accounts="handleDeletePayers"
-    />
-    <AccountList
-      :role="UserRole.Payee"
-      class="lg:col-start-2 lg:col-span-1"
-      :title="'Payees'"
-      :accountIds="state.payeeIndex"
-      :fund="fund"
-      :user-is-owner="userIsOwner"
-      :add-status="createPayeesStatus"
-      :remove-status="deletePayeesStatus"
-      @add-accounts="handleCreatePayees"
-      @remove-accounts="handleDeletePayees"
-    />
+    <div class="lg:col-start-1 lg:col-span-1">
+      <AccountList
+        class="bg-white rounded-lg"
+        :role="UserRole.Payer"
+        :title="'Payers'"
+        :accountIds="payerIndex"
+        :fund="fund"
+        :user-is-owner="userIsOwner"
+        :add-status="createPayersStatus"
+        :remove-status="deletePayersStatus"
+        @add-accounts="handleCreatePayers"
+        @remove-accounts="handleDeletePayers"
+      />
+    </div>
+    <div class="lg:col-start-2 lg:col-span-1">
+      <AccountList
+        class="bg-white rounded-lg"
+        :role="UserRole.Payee"
+        :title="'Payees'"
+        :accountIds="payeeIndex"
+        :fund="fund"
+        :user-is-owner="userIsOwner"
+        :add-status="createPayeesStatus"
+        :remove-status="deletePayeesStatus"
+        @add-accounts="handleCreatePayees"
+        @remove-accounts="handleDeletePayees"
+      />
+    </div>
   </div>
 </template>

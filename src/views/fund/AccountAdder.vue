@@ -6,7 +6,7 @@
   import { useDialog } from "@/composables/ui";
   import { UserAddIcon } from "@heroicons/vue/solid";
   import StringListBuilder from "@/components/StringListBuilder.vue";
-  import { PromiseTracker } from "@/models/PromiseTracker";
+  import { PromiseTracker } from "@/models/promise-tracker";
   import TextField from "@/components/TextField.vue";
 
   const props = defineProps<{

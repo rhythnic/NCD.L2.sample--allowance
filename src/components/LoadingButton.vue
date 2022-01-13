@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { PromiseTracker } from "@/models/PromiseTracker";
+  import { PromiseTracker } from "@/models/promise-tracker";
   import Loading from "./Loading.vue";
 
   defineProps<{
