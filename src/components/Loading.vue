@@ -1,3 +1,8 @@
+<documentation>
+  Loading
+  Loading spinner with slot for content
+</documentation>
+
 <template>
   <div class="flex flex-col items-center">
     <svg

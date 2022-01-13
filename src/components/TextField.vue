@@ -1,3 +1,8 @@
+<documentation>
+  TextField
+  String input with label and help text
+</documentation>
+
 <script setup lang="ts">
   const props = defineProps<{
     id: string;

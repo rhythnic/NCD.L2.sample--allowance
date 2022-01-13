@@ -1,10 +1,17 @@
+<documentation>
+  TransferDialog
+  User inputs a recipient and an amount.  If recipient is passed as prop, the input is disabled.
+
+  *calls FundContract#transfer
+</documentation>
+
 <script setup lang="ts">
   import { reactive, watch } from "vue";
   import { useI18n } from "vue-i18n";
   import ActionDialog from "@/components/ActionDialog.vue";
   import { PromiseTracker } from "@/models/promise-tracker";
   import TextField from "@/components/TextField.vue";
-  import { FundContract } from "@/models/fund";
+  import { FundContract } from "@/models/interfaces";
 
   const { t } = useI18n({
     useScope: "global",
@@ -46,7 +53,7 @@
 
 <template>
   <ActionDialog
-    :is-open="isOpen"
+    :open="isOpen"
     :status="status"
     :title="t('actions.transferMoney')"
     :confirm-label="t('actions.transfer')"

@@ -1,12 +1,18 @@
+<documentation>
+  AmountWidget
+  Shows an amount and optionally an icon button.
+  Clicking the button opens the dialog, allowing the user to interact with the amount.
+</documentation>
+
 <script setup lang="ts">
-  import { reactive } from "vue";
+  import { ref } from "vue";
   import { useI18n } from "vue-i18n";
   import ActionDialog from "./ActionDialog.vue";
   import TextField from "@/components/TextField.vue";
   import { PromiseTracker } from "@/models/promise-tracker";
   import IconButton from "./IconButton.vue";
   import { SelectorIcon } from "@heroicons/vue/solid";
-  import NearIcon from "@/components/NearIcon.vue";
+  import NearIcon from "@/components/NearIconSvg.vue";
 
   const { t } = useI18n({
     useScope: "global",
@@ -14,7 +20,7 @@
   });
 
   const props = defineProps<{
-    promiseTracker: PromiseTracker;
+    status: PromiseTracker;
     amount: string;
     showActions: boolean;
     title: string;
@@ -26,18 +32,16 @@
     (e: "set-amount", amount: string): void;
   }>();
 
-  const state = reactive({
-    open: false,
-    amount: props.amount,
-  });
+  const isOpen = ref(false);
+  const amount = ref(props.amount);
 
   function initSetBalance() {
-    state.amount = "";
-    state.open = true;
+    amount.value = "";
+    isOpen.value = true;
   }
 
   function handleCancel() {
-    state.open = false;
+    isOpen.value = false;
   }
 </script>
 
@@ -53,19 +57,20 @@
   </div>
   <ActionDialog
     v-if="showActions"
-    :is-open="state.open"
-    :promise-tracker="promiseTracker"
+    :open="isOpen"
+    :status="status"
     :title="title"
     :confirm-label="confirmLabel"
-    :disable-confirm="!state.amount || state.amount === amount"
-    @confirm="emit('set-amount', state.amount)"
+    :disable-confirm="!amount || amount === amount"
+    @confirm="emit('set-amount', amount)"
     @cancel="handleCancel"
+    @success="handleCancel"
   >
     <TextField
       class="mt-4"
       id="amount"
       name="amount"
-      v-model="state.amount"
+      v-model="amount"
       type="text"
       :label="t('account.amount')"
       :help-text="helpText"

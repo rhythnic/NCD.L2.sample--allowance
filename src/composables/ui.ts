@@ -1,3 +1,7 @@
+/**
+ * Composables for common UI state
+ */
+
 import { ref } from "vue";
 
 export function useDialog() {

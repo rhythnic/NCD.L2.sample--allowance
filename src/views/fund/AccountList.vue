@@ -1,12 +1,17 @@
+<documentation>
+  AccountList
+  Used for Payer/Payee lists.  Shows AccountRows for each account ID, and a header with action buttons.
+</documentation>
+
 <script setup lang="ts">
   import { ref } from "vue";
   import { useI18n } from "vue-i18n";
   import { PromiseTracker } from "@/models/promise-tracker";
-  import { FundContract, UserRole } from "@/models/fund";
+  import { FundContract, UserRole } from "@/models/interfaces";
   import { useEditMode, useDialog } from "@/composables/ui";
   import EditButton from "@/components/EditButton.vue";
-  import AccountAdder from "./AccountAdder.vue";
-  import AccountRemover from "./AccountRemover.vue";
+  import AccountAddWidget from "./AccountAddWidget.vue";
+  import AccountRemoveWidget from "./AccountRemoveWidget.vue";
   import TransferDialog from "./TransferDialog.vue";
   import PayerRow from "./PayerRow.vue";
   import PayeeRow from "./PayeeRow.vue";
@@ -63,13 +68,13 @@
       </div>
       <!-- Actions -->
       <div class="ml-4 mt-2 flex-shrink-0 flex-1 flex justify-end">
-        <AccountRemover
+        <AccountRemoveWidget
           :title="t(isPayer ? 'payer.remove' : 'payee.remove')"
           :account-ids="accountsToRemove"
           @confirm="emit('remove-accounts', accountsToRemove)"
           :remove-status="removeStatus"
         />
-        <AccountAdder
+        <AccountAddWidget
           :title="t(isPayer ? 'payer.add' : 'payee.add')"
           :edit-mode="editMode"
           :add-status="addStatus"
@@ -85,6 +90,7 @@
     <div class="flow-root">
       <ul role="list" class="divide-y divide-gray-200">
         <template v-for="accountId in accountIds" :key="accountId">
+          <!-- Payer Row shown for the PayerList -->
           <PayerRow v-if="isPayer" :fund="fund" :account-id="accountId">
             <template v-slot:default="slotProps">
               <AccountRow
@@ -103,6 +109,7 @@
               </AccountRow>
             </template>
           </PayerRow>
+          <!-- Payee Row shown for the Payee List -->
           <PayeeRow v-else :fund="fund" :account-id="accountId">
             <template v-slot:default="slotProps">
               <AccountRow

@@ -1,3 +1,9 @@
+<documentation>
+  AccountAddWidget
+  Clicking on the "add" button shows a dialog.  The dialog collects a list of account ids and a money amount.
+  The amount input will be the initial balance of these new accounts in the fund.
+</documentation>
+
 <script setup lang="ts">
   import { reactive, watch } from "vue";
   import { useI18n } from "vue-i18n";
@@ -53,8 +59,8 @@
 <template>
   <AddButton v-if="editMode" class="ml-4" @click="dialog.show" />
   <ActionDialog
-    :is-open="dialog.isOpen.value"
-    :promise-tracker="addStatus"
+    :open="dialog.isOpen.value"
+    :status="addStatus"
     :title="title"
     :confirm-label="t('actions.add')"
     :disable-confirm="!state.accountsToAdd.length"

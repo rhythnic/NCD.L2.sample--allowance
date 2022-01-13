@@ -1,4 +1,15 @@
+<documentation>
+  ActionDialog
+  Dialog with confirm and cancel buttons and slot for content
+
+  About props.status
+  The status prop is a PromiseTracker.  The dialog can remain open during an async request, and close
+  on success or display the error message.  Emitting the "success" event on promise resolution allows
+  parent components to clean up state.
+</documentation>
+
 <script setup lang="ts">
+  import { watch } from 'vue';
   import { useI18n } from "vue-i18n";
   import { PromiseTracker } from "@/models/promise-tracker";
   import Dialog from "./DefaultDialog.vue";
@@ -10,7 +21,7 @@
     inheritLocale: true,
   });
 
-  defineProps<{
+  const props = defineProps<{
     title: string;
     open: boolean;
     confirmLabel?: string;
@@ -22,11 +33,19 @@
   const emit = defineEmits<{
     (e: "confirm"): void;
     (e: "cancel"): void;
+    (e: "success"): void;
   }>();
+
+  watch(
+    () => props.status?.succeeded,
+    (succeeded) => {
+      if (succeeded) emit('success');
+    }
+  )
 </script>
 
 <template>
-  <Dialog :title="title" v-bind="$attrs">
+  <Dialog :open="open" :title="title" v-bind="$attrs">
     <slot></slot>
     <div class="mt-4 flex justify-between">
       <LoadingButton
@@ -45,6 +64,6 @@
         {{ cancelLabel || t("actions.cancel") }}
       </button>
     </div>
-    <ErrorMessage v-if="status" class="mt-2" :promise-tracker="status" />
+    <ErrorMessage class="mt-2" :status="status" />
   </Dialog>
 </template>

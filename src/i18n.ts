@@ -1,5 +1,11 @@
+/**
+ * i18n singleton
+ * Support for multiple languages
+ * Language files are in src/locales and must be added to supportedLanguages array below
+ */
+
 import { createI18n, I18n } from "vue-i18n";
-import enUs from "./locales/en-US.json";
+import enUs from "@/locales/en-US.json";
 
 const DEFAULT_LOCALE = "en-US";
 

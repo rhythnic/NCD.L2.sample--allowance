@@ -1,9 +1,15 @@
+<documentation>
+  Home Route
+  Home is only accesible when signed out.  If signed in, it will redirect to the /funds route.
+  Shows simple hero section with description and sign in button
+</documentation>
+
 <script setup lang="ts">
   import { inject, onBeforeMount } from "vue";
   import { useRoute, useRouter } from "vue-router";
   import { useI18n } from "vue-i18n";
-  import { Wallet } from "@/models/wallet";
-  import SignInButtonAlt from "@/components/SignInButtonAlt.vue";
+  import { Wallet } from "@/models/interfaces";
+  import SignInButtonAlt from "@/components/NearSignInButtonKeyboardStyle.vue";
 
   const wallet = inject("wallet") as Wallet;
   const contractId = inject("contractId") as string;
@@ -24,7 +30,8 @@
 </script>
 
 <template>
-  <div class="mt-16 mx-auto max-w-7xl px-4 sm:mt-24">
+  <!-- Hero -->
+  <section class="mt-16 mx-auto max-w-7xl px-4 sm:mt-24">
     <div class="text-center">
       <h1
         class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl"
@@ -39,12 +46,15 @@
         With Allowance, you can setup funds with authorized senders, recipients,
         and spending limits. Sign in with NEAR Wallet to get started.
       </p>
+      <!-- Sign In Button -->
       <div class="mt-12 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
         <SignInButtonAlt
           class="w-32 h-32"
           @click="wallet.requestSignIn({ contractId })"
         />
       </div>
+      <!-- END Sign In Button -->
     </div>
-  </div>
+  </section>
+  <!-- END Hero -->
 </template>

@@ -1,6 +1,10 @@
+<documentation>
+  NearSignInButton
+</documentation>
+
 <script setup lang="ts">
   import { useI18n } from "vue-i18n";
-  import NearIcon from "./NearIcon.vue";
+  import NearIcon from "./NearIconSvg.vue";
 
   const { t } = useI18n({
     useScope: "global",

@@ -1,9 +1,14 @@
-<script setup lang="ts">
-  // https://codepen.io/vladracoare/pen/jOPmMap
-  // Thanks <a href="https://twitter.com/pwign" class="credits__reference">Anh</a> for the inspiration
+<documentation>
+  KeyboardStyleButton
+  Looks like a physical keyboard button
+  https://codepen.io/vladracoare/pen/jOPmMap
+  Thanks <a href="https://twitter.com/pwign" class="credits__reference">Anh</a> for the inspiration
+</documentation>
 
+
+<script setup lang="ts">
   defineProps<{
-    lighted: boolean;
+    lighted: boolean; // show a neon glow on active
   }>();
 </script>
 

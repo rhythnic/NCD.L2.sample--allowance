@@ -1,3 +1,8 @@
+/**
+Main css file.  Import Tailwind
+https://tailwindcss.com/docs/guides/vite
+*/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

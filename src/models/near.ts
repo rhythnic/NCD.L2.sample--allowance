@@ -1,39 +1,64 @@
+/**
+ * NEAR implementations of application interfaces
+ */
+
+import { Near, utils, Account as NearApiJsAccount } from "near-api-js";
 import BN from "bn.js";
-import { utils } from "near-api-js";
+import { Account, FundRegistryContract, FundContract, FundCore, PayerPayeeCore } from './interfaces';
 
-export interface FundCore {
-  owner: string;
-  unrestricted_balance: string;
+
+export class AccountNear implements Account {
+  private account: null | NearApiJsAccount = null;
+
+  constructor(public accountId: string, private near: Near) {}
+
+  private async getAccount(): Promise<NearApiJsAccount> {
+    if (!this.account) {
+      this.account = await this.near.account(this.accountId);
+    }
+    return this.account;
+  }
+
+  async availableBalance(fracDigits: number): Promise<string> {
+    const account = await this.getAccount();
+    const accountBalance = await account.getAccountBalance();
+    return utils.format.formatNearAmount(accountBalance.available, fracDigits);
+  }
+
+  async sendMoney(recipient: string, amount: string): Promise<void> {
+    const account = await this.getAccount();
+    const yoctoAmount = utils.format.parseNearAmount(amount) as BN;
+    await account.sendMoney(recipient, yoctoAmount);
+  }
 }
 
-export interface PayerPayeeCore {
-  balance: string;
+
+export class FundRegistryContractNear implements FundRegistryContract {
+  private createFundAttachedDeposit = utils.format.parseNearAmount("3") as BN;
+
+  constructor(
+    public contractId: string,
+    private contract: any,
+    private gas: BN,
+  ) {}
+
+  getFundIndex(owner: string): Promise<string[]> {
+    return this.contract.get_funds({ owner });
+  }
+
+  createFund(subaccount: string): Promise<void> {
+    return this.contract.create_fund(
+      { subaccount },
+      this.gas,
+      this.createFundAttachedDeposit,
+    );
+  }
+
+  deleteFund(subaccount: string): Promise<void> {
+    return this.contract.delete_fund({ subaccount }, this.gas);
+  }
 }
 
-export enum UserRole {
-  Payer,
-  Payee,
-}
-
-export interface FundContract {
-  contractId: string;
-  getFund: () => Promise<FundCore>;
-  getPayers: () => Promise<string[]>;
-  getPayees: () => Promise<string[]>;
-  getPayer: (accountId: string) => Promise<PayerPayeeCore>;
-  getPayee: (accountId: string) => Promise<PayerPayeeCore>;
-  createPayers: (accountIds: string[], balance: string) => Promise<void>;
-  createPayees: (accountIds: string[], balance: string) => Promise<void>;
-  deletePayers: (accountIds: string[]) => Promise<void>;
-  deletePayees: (accountIds: string[]) => Promise<void>;
-  setUnrestrictedBalance: (amount: string) => Promise<void>;
-  setPayerBalance: (accountId: string, amount: string) => Promise<void>;
-  setPayeeBalance: (accountId: string, amount: string) => Promise<void>;
-  transfer: (recipient: string, amount: string) => Promise<void>;
-  depositMoney: (amount: string) => Promise<void>;
-}
-
-export type buildFundContractType = (subaccount: string) => FundContract;
 
 export class FundContractNear implements FundContract {
   constructor(

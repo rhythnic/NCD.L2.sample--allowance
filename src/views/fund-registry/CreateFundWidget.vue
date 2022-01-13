@@ -1,7 +1,14 @@
+<documentation>
+  CreateFundWidget
+  Contains an Add Button and a Dialog with a form for creating a Fund
+
+  *calls FundRegistryContract#createFund
+</documentation>
+
 <script setup lang="ts">
   import { inject, computed, ref } from "vue";
   import { useI18n } from "vue-i18n";
-  import { FundRegistryContract } from "@/models/fund-registry";
+  import { FundRegistryContract } from "@/models/interfaces";
   import { PromiseTracker } from "@/models/promise-tracker";
   import { useDialog } from "@/composables/ui";
   import AddButton from "@/components/AddButton.vue";
@@ -19,7 +26,6 @@
     fundRegistry: FundRegistryContract;
   }>();
 
-  // state
   const createFundStatus = new PromiseTracker();
   const dialog = useDialog();
   const subaccount = ref("");
@@ -41,22 +47,20 @@
 <template>
   <AddButton @click="dialog.show" />
   <ActionDialog
-    :is-open="dialog.isOpen.value"
-    :promise-tracker="createFundStatus"
+    :open="dialog.isOpen.value"
+    :status="createFundStatus"
     :title="t('fund.create')"
     :confirm-label="t('actions.create')"
     :disable-confirm="!subaccount"
     @confirm="handleConfirm"
     @cancel="handleCancel"
   >
-    <div>
-      <TextField
-        id="subaccount"
-        :label="t('fund.subaccount')"
-        v-model="subaccount"
-        :help-text="helpText"
-        name="subaccount"
-      />
-    </div>
+    <TextField
+      id="subaccount"
+      :label="t('fund.subaccount')"
+      v-model="subaccount"
+      :help-text="helpText"
+      name="subaccount"
+    />
   </ActionDialog>
 </template>

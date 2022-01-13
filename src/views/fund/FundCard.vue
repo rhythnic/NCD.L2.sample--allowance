@@ -1,9 +1,17 @@
+<documentation>
+  FundCard
+  Shows fund info and state, the contract available balance and the fund's unrestricted balance
+
+  *views Account#availableBalance
+  *calls FundContract#depositMoney
+  *calls FundContract#setUnrestrictedBalance
+</documentation>
+
 <script setup lang="ts">
   import { inject, onMounted, ref } from "vue";
   import { useI18n } from "vue-i18n";
   import { PromiseTracker } from "@/models/promise-tracker";
-  import { buildAccountType } from "@/models/account";
-  import { FundContract } from "@/models/fund";
+  import { buildAccountType, FundContract } from "@/models/interfaces";
   import { useDialog } from "@/composables/ui";
   import AmountWidget from "@/components/AmountWidget.vue";
   import TransferButton from "@/components/TransferButton.vue";
@@ -74,7 +82,8 @@
     <!-- Balances List -->
     <div class="border-t border-gray-200">
       <div class="divide-y divide-gray-200">
-        <AccountRow :label="fund.contractId" :edit-mode="false">
+        <!-- Fund Contract Available Balance Row -->
+        <AccountRow :accountId="fund.contractId" :edit-mode="false">
           <AmountWidget
             :amount="accountAvailableBalance"
             :show-actions="userIsOwner"
@@ -84,6 +93,8 @@
             @set-amount="handleTransferToFund"
           />
         </AccountRow>
+         <!-- END Fund Contract Available Balance Row -->
+         <!-- Fund Unrestricted Balance Row -->
         <AccountRow :label="t('fund.unrestrictedBalance')" :edit-mode="false">
           <template v-slot:transfer-button>
             <TransferButton @click="transferDialog.show" />
@@ -97,6 +108,7 @@
             @set-amount="handleSetBalance"
           />
         </AccountRow>
+        <!-- END Fund Unrestricted Balance Row -->
       </div>
     </div>
     <!-- END Balances List -->

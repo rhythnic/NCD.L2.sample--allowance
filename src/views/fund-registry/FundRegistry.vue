@@ -1,10 +1,16 @@
+<documentation>
+  FundRegistry Page
+  Display navigation to the user's funds, and show button to create fund.
+
+  *views FundRegistryContract#getFundIndex
+</documentation>
+
 <script setup lang="ts">
   import { inject, onMounted, ref } from "vue";
   import { useI18n } from "vue-i18n";
   import { useRoute } from "vue-router";
-  import { buildFundRegistryContractType } from "@/models/fund-registry";
+  import { Wallet, buildFundRegistryContractType } from "@/models/interfaces";
   import { PromiseTracker } from "@/models/promise-tracker";
-  import { Wallet } from "@/models/wallet";
   import Loading from "@/components/Loading.vue";
   import CreateFundWidget from "./CreateFundWidget.vue";
 
@@ -19,7 +25,6 @@
     "buildFundRegistryContract",
   ) as buildFundRegistryContractType;
 
-  // state
   const route = useRoute();
   const loadStatus = new PromiseTracker();
   const fundIndex = ref([]);
@@ -35,21 +40,29 @@
 
 <template>
   <div class="flex justify-center items-center">
+    <!-- Centered White Panel -->
     <div class="bg-white rounded p-4">
+      <!-- Header -->
       <div class="flex items-center border-b mb-4 pb-1">
         <h2 class="flex-1">{{ t("fund.managedFunds") }}</h2>
         <CreateFundWidget :fund-registry="fundRegistry" />
       </div>
+      <!-- END Header -->
+      <!-- Loading -->
       <div v-if="loadStatus.isLongRunning">
         <Loading>
           <span class="mt-2">{{ t("fund.loading") }}</span>
         </Loading>
       </div>
+      <!-- END Loading -->
+      <!-- Loading Error -->
       <div v-else-if="loadStatus.failed">
         <p class="text-red-500">
           {{ (loadStatus.error as Error).toString() }}
         </p>
       </div>
+      <!-- END Loading Error -->
+      <!-- Fund List -->
       <div v-else-if="fundIndex.length">
         <ul role="list">
           <router-link
@@ -63,11 +76,15 @@
           </router-link>
         </ul>
       </div>
+      <!-- END Fund List -->
+      <!-- No Funds Prompt -->
       <div v-else>
         <p class="text-lg text-gray-500 text-center mt-6">
           {{ t("fund.noFundsPrompt") }}
         </p>
       </div>
+      <!-- END No Funds Prompt -->
     </div>
+    <!-- END Centered White Panel -->
   </div>
 </template>

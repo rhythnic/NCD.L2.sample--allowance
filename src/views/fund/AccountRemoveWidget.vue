@@ -1,3 +1,8 @@
+<documentation>
+  AccountRemoveWidget
+  When AccountRows are selected, the DeleteButton will be shown.  Clicking the delete button opens a confirm dialog.
+</documentation>
+
 <script setup lang="ts">
   import { useI18n } from "vue-i18n";
   import DeleteButton from "@/components/DeleteButton.vue";
@@ -26,8 +31,8 @@
 <template>
   <DeleteButton v-if="accountIds.length" @click="dialog.show" />
   <ActionDialog
-    :is-open="dialog.isOpen.value"
-    :promise-tracker="removeStatus"
+    :open="dialog.isOpen.value"
+    :status="removeStatus"
     :title="title"
     :confirm-label="t('actions.delete')"
     @cancel="dialog.hide"

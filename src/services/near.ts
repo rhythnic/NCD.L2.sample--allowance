@@ -1,3 +1,8 @@
+/**
+ * NEAR Service
+ * Also exports factory functions for creating Contracts for the fund registry and funds
+ */
+
 import {
   keyStores,
   Near,
@@ -6,9 +11,7 @@ import {
   Contract,
 } from "near-api-js";
 import BN from "bn.js";
-import { FundRegistryContractNear } from "@/models/fund-registry";
-import { FundContractNear } from "@/models/fund";
-import { AccountNear } from "@/models/account";
+import { FundRegistryContractNear, FundContractNear, AccountNear } from "@/models/near";
 
 export const NETWORK_ID = import.meta.env.VITE_NEAR_NETWORK_ID as string;
 export const CONTRACT_ID = import.meta.env.VITE_NEAR_CONTRACT_ID as string;

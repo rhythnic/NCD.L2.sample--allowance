@@ -1,7 +1,12 @@
+<documentation>
+  StringListBuilder
+  An input that maintains a list of strings
+  Has one text field for inputing the strings
+</documentation>
+
 <script setup lang="ts">
   import { ref } from "vue";
   import { MinusCircleIcon } from "@heroicons/vue/solid";
-  import TextField from "./TextField.vue";
 
   const props = defineProps<{
     textLabel: string;

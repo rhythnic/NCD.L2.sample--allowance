@@ -1,3 +1,9 @@
+<documentation>
+  Layout
+  Layout is rendered by the main App component at src/near-app/App.vue
+  Layout watches the route and redirects to /home if the user is not signed in
+</documentation>
+
 <script setup lang="ts">
   import { inject } from "vue";
   import {
@@ -6,7 +12,7 @@
     useRoute,
     useRouter,
   } from "vue-router";
-  import { Wallet } from "@/models/wallet";
+  import { Wallet } from "@/models/interfaces";
   import Header from "./Header.vue";
 
   const wallet = inject("wallet") as Wallet;

@@ -1,3 +1,10 @@
+<documentation>
+  LoadingButton
+  Used as a submit button for async actions.
+  Shows a spinner instead of the button label if the request is taking a long time.
+  Disables the button when the request is in progress.
+</documentation>
+
 <script setup lang="ts">
   import { PromiseTracker } from "@/models/promise-tracker";
   import Loading from "./Loading.vue";

@@ -1,3 +1,8 @@
+/**
+ * PromiseTracker
+ * Used to assist components in showing the status of async requests
+ */
+
 import { Ref, ref } from "vue";
 
 export enum PromiseStatus {
