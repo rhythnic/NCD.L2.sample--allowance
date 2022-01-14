@@ -1,11 +1,11 @@
-<documentation>
+<!--
   FundCard
   Shows fund info and state, the contract available balance and the fund's unrestricted balance
 
   *views Account#availableBalance
   *calls FundContract#depositMoney
   *calls FundContract#setUnrestrictedBalance
-</documentation>
+-->
 
 <script setup lang="ts">
   import { inject, onMounted, ref } from "vue";
@@ -17,10 +17,6 @@
   import TransferButton from "@/components/TransferButton.vue";
   import TransferDialog from "./TransferDialog.vue";
   import AccountRow from "./AccountRow.vue";
-
-  const fracDigitLimit = parseInt(
-    import.meta.env.VITE_FRAC_DIGIT_LIMIT as string,
-  );
 
   const buildAccount = inject("buildAccount") as buildAccountType;
 
@@ -47,9 +43,8 @@
   const subaccount = props.fund.contractId.split(".")[0];
 
   onMounted(async () => {
-    accountAvailableBalance.value = await fundAccount.availableBalance(
-      fracDigitLimit,
-    );
+    accountAvailableBalance.value = await fundAccount.availableBalance();
+    console.log(accountAvailableBalance.value);
   });
 
   function handleTransferToFund(amount: string) {
@@ -87,14 +82,14 @@
           <AmountWidget
             :amount="accountAvailableBalance"
             :show-actions="userIsOwner"
-            :promise-tracker="transferToFundStatus"
+            :status="transferToFundStatus"
             :title="t('fund.addMoney')"
             :confirm-label="t('actions.transfer')"
             @set-amount="handleTransferToFund"
           />
         </AccountRow>
-         <!-- END Fund Contract Available Balance Row -->
-         <!-- Fund Unrestricted Balance Row -->
+        <!-- END Fund Contract Available Balance Row -->
+        <!-- Fund Unrestricted Balance Row -->
         <AccountRow :label="t('fund.unrestrictedBalance')" :edit-mode="false">
           <template v-slot:transfer-button>
             <TransferButton @click="transferDialog.show" />
@@ -102,7 +97,7 @@
           <AmountWidget
             :amount="unrestrictedBalance"
             :show-actions="userIsOwner"
-            :promise-tracker="setBalanceStatus"
+            :status="setBalanceStatus"
             :title="t('fund.setUnrestrictedBalance')"
             :confirm-label="t('actions.set')"
             @set-amount="handleSetBalance"

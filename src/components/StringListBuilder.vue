@@ -1,8 +1,8 @@
-<documentation>
+<!--
   StringListBuilder
   An input that maintains a list of strings
   Has one text field for inputing the strings
-</documentation>
+-->
 
 <script setup lang="ts">
   import { ref } from "vue";

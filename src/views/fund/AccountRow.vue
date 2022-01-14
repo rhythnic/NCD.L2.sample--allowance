@@ -1,4 +1,4 @@
-<documentation>
+<!--
   AccountRow
   A row in the AccountList
   Shows account ID or label, a transfer money button (used for payees and to deposit mooney to contract),
@@ -12,7 +12,7 @@
   About Transfer Button
   It shows on Payee rows so users can send money to payees.  It shows on the unrestricted balance row in the fund card
   so users can make a transfer to a recipient that is not a payee.
-</documentation>
+-->
 
 <script setup lang="ts">
   import { computed } from "vue";

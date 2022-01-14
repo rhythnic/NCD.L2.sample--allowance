@@ -1,4 +1,4 @@
-<documentation>
+<!--
   ActionDialog
   Dialog with confirm and cancel buttons and slot for content
 
@@ -6,10 +6,10 @@
   The status prop is a PromiseTracker.  The dialog can remain open during an async request, and close
   on success or display the error message.  Emitting the "success" event on promise resolution allows
   parent components to clean up state.
-</documentation>
+-->
 
 <script setup lang="ts">
-  import { watch } from 'vue';
+  import { watch } from "vue";
   import { useI18n } from "vue-i18n";
   import { PromiseTracker } from "@/models/promise-tracker";
   import Dialog from "./DefaultDialog.vue";
@@ -39,9 +39,9 @@
   watch(
     () => props.status?.succeeded,
     (succeeded) => {
-      if (succeeded) emit('success');
-    }
-  )
+      if (succeeded) emit("success");
+    },
+  );
 </script>
 
 <template>

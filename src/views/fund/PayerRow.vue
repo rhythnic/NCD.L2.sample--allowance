@@ -1,10 +1,10 @@
-<documentation>
+<!--
 PayerRow
 Container that provides payer-context to the AccountRow in the slot
 
 *views FundContract#getPayer
 *calls FundContract#setPayerBalance
-</documentation>
+-->
 
 <script setup lang="ts">
   import { ref, onMounted } from "vue";

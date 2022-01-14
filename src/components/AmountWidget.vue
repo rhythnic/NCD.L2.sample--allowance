@@ -1,11 +1,11 @@
-<documentation>
+<!--
   AmountWidget
   Shows an amount and optionally an icon button.
   Clicking the button opens the dialog, allowing the user to interact with the amount.
-</documentation>
+-->
 
 <script setup lang="ts">
-  import { ref } from "vue";
+  import { ref, watch } from "vue";
   import { useI18n } from "vue-i18n";
   import ActionDialog from "./ActionDialog.vue";
   import TextField from "@/components/TextField.vue";
@@ -33,10 +33,10 @@
   }>();
 
   const isOpen = ref(false);
-  const amount = ref(props.amount);
+  const inputAmount = ref(props.amount);
 
   function initSetBalance() {
-    amount.value = "";
+    inputAmount.value = "";
     isOpen.value = true;
   }
 
@@ -61,8 +61,8 @@
     :status="status"
     :title="title"
     :confirm-label="confirmLabel"
-    :disable-confirm="!amount || amount === amount"
-    @confirm="emit('set-amount', amount)"
+    :disable-confirm="!inputAmount || inputAmount === amount"
+    @confirm="emit('set-amount', inputAmount)"
     @cancel="handleCancel"
     @success="handleCancel"
   >
@@ -70,7 +70,7 @@
       class="mt-4"
       id="amount"
       name="amount"
-      v-model="amount"
+      v-model="inputAmount"
       type="text"
       :label="t('account.amount')"
       :help-text="helpText"

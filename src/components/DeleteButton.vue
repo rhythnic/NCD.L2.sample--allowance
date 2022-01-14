@@ -1,3 +1,7 @@
+<!-- 
+  DeleteButton
+-->
+
 <script setup lang="ts">
   import { TrashIcon } from "@heroicons/vue/solid";
   import IconButton from "./IconButton.vue";

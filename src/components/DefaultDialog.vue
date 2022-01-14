@@ -1,7 +1,7 @@
-<documentation>
+<!--
   DefaultDialog
   General purpose dialog
-</documentation>
+-->
 
 <script setup lang="ts">
   import {

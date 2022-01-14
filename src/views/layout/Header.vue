@@ -1,7 +1,7 @@
-<documentation>
+<!--
   Header
   Application header contains app title, navigation, user menu, and signIn/signOut buttons
-</documentation>
+-->
 
 <script setup lang="ts">
   import { inject } from "vue";

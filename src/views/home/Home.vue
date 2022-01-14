@@ -1,8 +1,8 @@
-<documentation>
+<!--
   Home Route
   Home is only accesible when signed out.  If signed in, it will redirect to the /funds route.
   Shows simple hero section with description and sign in button
-</documentation>
+-->
 
 <script setup lang="ts">
   import { inject, onBeforeMount } from "vue";

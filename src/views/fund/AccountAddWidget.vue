@@ -1,8 +1,8 @@
-<documentation>
+<!--
   AccountAddWidget
   Clicking on the "add" button shows a dialog.  The dialog collects a list of account ids and a money amount.
   The amount input will be the initial balance of these new accounts in the fund.
-</documentation>
+-->
 
 <script setup lang="ts">
   import { reactive, watch } from "vue";

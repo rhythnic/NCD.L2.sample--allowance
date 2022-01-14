@@ -1,9 +1,9 @@
-<documentation>
+<!--
   TransferDialog
   User inputs a recipient and an amount.  If recipient is passed as prop, the input is disabled.
 
   *calls FundContract#transfer
-</documentation>
+-->
 
 <script setup lang="ts">
   import { reactive, watch } from "vue";
@@ -37,6 +37,7 @@
   const status = new PromiseTracker();
 
   async function handleConfirm() {
+    debugger;
     await status.track(props.fund.transfer(state.recipient, state.amount));
     if (status.succeeded) {
       emit("close");

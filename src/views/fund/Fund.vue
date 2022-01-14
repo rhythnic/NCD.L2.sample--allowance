@@ -1,9 +1,9 @@
-<documentation>
+<!--
   Fund Page
   Shows fund card, payer list, and payee list
 
   *views FundContract#getFund
-</documentation>
+-->
 
 <script setup lang="ts">
   import { inject, computed, onMounted, ref } from "vue";
@@ -12,7 +12,7 @@
   import { PromiseTracker } from "@/models/promise-tracker";
   import AccountList from "./AccountList.vue";
   import FundCard from "./FundCard.vue";
-  import PayerList from './PayerList.vue'
+  import PayerList from "./PayerList.vue";
   import PayeeList from "./PayeeList.vue";
 
   const wallet = inject("wallet") as Wallet;

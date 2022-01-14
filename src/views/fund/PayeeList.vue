@@ -1,25 +1,25 @@
-<documentation>
+<!--
   PayeeList
   Container to provide payee-context to AccountList in slot
 
   *views FundContract#getPayees
   *calls FundContract#createPayees
   *calls FundContract#deletePayees
-</documentation>
+-->
 
 <script setup lang="ts">
-import { FundContract } from '@/models/interfaces';
-import { PromiseTracker } from '@/models/promise-tracker';
-import { onMounted, ref } from 'vue';
+  import { FundContract } from "@/models/interfaces";
+  import { PromiseTracker } from "@/models/promise-tracker";
+  import { onMounted, ref } from "vue";
 
-const props = defineProps<{
-  fund: FundContract
-}>();
+  const props = defineProps<{
+    fund: FundContract;
+  }>();
 
-const payeeIndex = ref([]);
-const loadStatus = new PromiseTracker();
-const createPayeesStatus = new PromiseTracker();
-const deletePayeesStatus = new PromiseTracker();
+  const payeeIndex = ref([]);
+  const loadStatus = new PromiseTracker();
+  const createPayeesStatus = new PromiseTracker();
+  const deletePayeesStatus = new PromiseTracker();
 
   onMounted(async () => {
     const result = await loadStatus.track(props.fund.getPayees());

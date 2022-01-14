@@ -1,3 +1,7 @@
+<!--
+  TransferButton
+-->
+
 <script setup lang="ts">
   import { PaperAirplaneIcon } from "@heroicons/vue/solid";
   import IconButton from "./IconButton.vue";

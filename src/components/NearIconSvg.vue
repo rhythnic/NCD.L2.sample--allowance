@@ -1,3 +1,7 @@
+<!-- 
+  NearIconSvg
+ -->
+
 <template>
   <svg
     id="Layer_1"

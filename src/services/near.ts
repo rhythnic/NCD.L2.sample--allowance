@@ -11,7 +11,11 @@ import {
   Contract,
 } from "near-api-js";
 import BN from "bn.js";
-import { FundRegistryContractNear, FundContractNear, AccountNear } from "@/models/near";
+import {
+  FundRegistryContractNear,
+  FundContractNear,
+  AccountNear,
+} from "@/models/near";
 
 export const NETWORK_ID = import.meta.env.VITE_NEAR_NETWORK_ID as string;
 export const CONTRACT_ID = import.meta.env.VITE_NEAR_CONTRACT_ID as string;

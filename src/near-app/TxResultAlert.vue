@@ -1,4 +1,4 @@
-<documentation>
+<!-- 
   TxResultAlert
   After the user approves a transaction in NEAR Wallet and is redirected back to the app,
   there is a transaction hash in the url search.  This component detects the hash in the url,
@@ -7,7 +7,7 @@
 
   NEAR Wallet doesn't redirect back to the application if there was a failure, so this
   component doesn't handle transaction failures.
-</documentation>
+-->
 
 <script setup lang="ts">
   import { ref, onMounted } from "vue";

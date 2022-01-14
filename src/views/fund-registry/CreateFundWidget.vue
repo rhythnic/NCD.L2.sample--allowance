@@ -1,9 +1,9 @@
-<documentation>
+<!--
   CreateFundWidget
   Contains an Add Button and a Dialog with a form for creating a Fund
 
   *calls FundRegistryContract#createFund
-</documentation>
+-->
 
 <script setup lang="ts">
   import { inject, computed, ref } from "vue";

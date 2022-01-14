@@ -1,8 +1,7 @@
-<documentation>
+<!--
   LocaleSelect
   A select input for choosing a language for i18n.
-</documentation>
-
+-->
 
 <script setup lang="ts">
   import { computed } from "vue";

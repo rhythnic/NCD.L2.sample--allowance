@@ -1,9 +1,9 @@
-<documentation>
+<!--
   FundRegistry Page
   Display navigation to the user's funds, and show button to create fund.
 
   *views FundRegistryContract#getFundIndex
-</documentation>
+-->
 
 <script setup lang="ts">
   import { inject, onMounted, ref } from "vue";

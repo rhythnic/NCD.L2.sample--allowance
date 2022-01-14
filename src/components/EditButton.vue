@@ -1,7 +1,7 @@
-<documentation>
+<!--
   EditButton
   Button uses the "active" prop to show a different style while parent is in edit mode.
-</documentation>
+-->
 
 <script setup lang="ts">
   import { PencilIcon as PencilIconSolid } from "@heroicons/vue/solid";

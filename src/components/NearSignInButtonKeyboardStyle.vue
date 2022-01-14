@@ -1,7 +1,7 @@
-<documentation>
+<!--
   NearSignInButtonKeyboardStyle
   Uses the KeyboardStyleButton for a 3D button press effect
-</documentation>
+-->
 
 <script setup lang="ts">
   import KeyboardStyleButton from "./KeyboardStyleButton.vue";

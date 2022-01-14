@@ -1,8 +1,7 @@
-<documentation>
+<!--
   ErrorMessage
   Uses a PromiseTracker to show an error message if an async request fails
-</documentation>
-
+-->
 
 <script setup lang="ts">
   import { PromiseTracker } from "@/models/promise-tracker";

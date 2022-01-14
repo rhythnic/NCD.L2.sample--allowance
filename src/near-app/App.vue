@@ -1,10 +1,10 @@
-<documentation>
+<!-- 
   App
   Top-level component for the application.
   The component tree is designed to make it easier to support multiple blockchains.
   This component provides NEAR protocol implementations of services that implement the interfaces defined in src/models.
   Child components can inject these services without being aware of which blockchain is being used.
-</documentation>
+-->
 
 <script setup lang="ts">
   import { provide } from "vue";

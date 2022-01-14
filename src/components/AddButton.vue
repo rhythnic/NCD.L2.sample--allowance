@@ -1,3 +1,7 @@
+<!-- 
+  AddButton
+ -->
+
 <script setup lang="ts">
   import { PlusSmIcon as PlusSmIconOutline } from "@heroicons/vue/outline";
   import IconButton from "./IconButton.vue";

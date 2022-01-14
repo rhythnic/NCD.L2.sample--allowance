@@ -4,8 +4,17 @@
 
 import { Near, utils, Account as NearApiJsAccount } from "near-api-js";
 import BN from "bn.js";
-import { Account, FundRegistryContract, FundContract, FundCore, PayerPayeeCore } from './interfaces';
+import {
+  Account,
+  FundRegistryContract,
+  FundContract,
+  FundCore,
+  PayerPayeeCore,
+} from "./interfaces";
 
+const FRAC_DIGIT_LIMIT = parseInt(
+  import.meta.env.VITE_FRAC_DIGIT_LIMIT as string,
+);
 
 export class AccountNear implements Account {
   private account: null | NearApiJsAccount = null;
@@ -19,19 +28,15 @@ export class AccountNear implements Account {
     return this.account;
   }
 
-  async availableBalance(fracDigits: number): Promise<string> {
+  async availableBalance(): Promise<string> {
     const account = await this.getAccount();
     const accountBalance = await account.getAccountBalance();
-    return utils.format.formatNearAmount(accountBalance.available, fracDigits);
-  }
-
-  async sendMoney(recipient: string, amount: string): Promise<void> {
-    const account = await this.getAccount();
-    const yoctoAmount = utils.format.parseNearAmount(amount) as BN;
-    await account.sendMoney(recipient, yoctoAmount);
+    return utils.format.formatNearAmount(
+      accountBalance.available,
+      FRAC_DIGIT_LIMIT,
+    );
   }
 }
-
 
 export class FundRegistryContractNear implements FundRegistryContract {
   private createFundAttachedDeposit = utils.format.parseNearAmount("3") as BN;
@@ -59,7 +64,6 @@ export class FundRegistryContractNear implements FundRegistryContract {
   }
 }
 
-
 export class FundContractNear implements FundContract {
   constructor(
     public contractId: string,
@@ -67,8 +71,15 @@ export class FundContractNear implements FundContract {
     private gas: BN,
   ) {}
 
-  getFund(): Promise<FundCore> {
-    return this.contract.get_fund();
+  async getFund(): Promise<FundCore> {
+    const result = await this.contract.get_fund();
+    return {
+      ...result,
+      unrestricted_balance: utils.format.formatNearAmount(
+        result.unrestricted_balance,
+        FRAC_DIGIT_LIMIT,
+      ),
+    };
   }
 
   getPayers(): Promise<string[]> {
@@ -79,20 +90,40 @@ export class FundContractNear implements FundContract {
     return this.contract.get_payees();
   }
 
-  getPayer(accountId: string): Promise<PayerPayeeCore> {
-    return this.contract.get_payer({ accountId });
+  async getPayer(accountId: string): Promise<PayerPayeeCore> {
+    const result = await this.contract.get_payer({ accountId });
+    return {
+      ...result,
+      balance: utils.format.formatNearAmount(result.balance, FRAC_DIGIT_LIMIT),
+    };
   }
 
-  getPayee(accountId: string): Promise<PayerPayeeCore> {
-    return this.contract.get_payee({ accountId });
+  async getPayee(accountId: string): Promise<PayerPayeeCore> {
+    const result = await this.contract.get_payee({ accountId });
+    return {
+      ...result,
+      balance: utils.format.formatNearAmount(result.balance, FRAC_DIGIT_LIMIT),
+    };
   }
 
   createPayers(accountIds: string[], balance: string): Promise<void> {
-    return this.contract.create_payers({ accountIds, balance }, this.gas);
+    return this.contract.create_payers(
+      {
+        accountIds,
+        balance: utils.format.parseNearAmount(balance) as BN,
+      },
+      this.gas,
+    );
   }
 
   createPayees(accountIds: string[], balance: string): Promise<void> {
-    return this.contract.create_payees({ accountIds, balance }, this.gas);
+    return this.contract.create_payees(
+      {
+        accountIds,
+        balance: utils.format.parseNearAmount(balance) as BN,
+      },
+      this.gas,
+    );
   }
 
   deletePayers(accountIds: string[]): Promise<void> {
@@ -104,19 +135,39 @@ export class FundContractNear implements FundContract {
   }
 
   setUnrestrictedBalance(amount: string): Promise<void> {
-    return this.contract.set_unrestricted_balance({ amount }, this.gas);
+    return this.contract.set_unrestricted_balance(
+      {
+        amount: utils.format.parseNearAmount(amount) as BN,
+      },
+      this.gas,
+    );
   }
 
   setPayerBalance(accountId: string, amount: string): Promise<void> {
-    return this.contract.set_payer_balance({ accountId, amount }, this.gas);
+    return this.contract.set_payer_balance(
+      {
+        accountId,
+        amount: utils.format.parseNearAmount(amount) as BN,
+      },
+      this.gas,
+    );
   }
 
   setPayeeBalance(accountId: string, amount: string): Promise<void> {
-    return this.contract.set_payee_balance({ accountId, amount }, this.gas);
+    return this.contract.set_payee_balance(
+      {
+        accountId,
+        amount: utils.format.parseNearAmount(amount) as BN,
+      },
+      this.gas,
+    );
   }
 
   transfer(recipient: string, amount: string): Promise<void> {
-    return this.contract.transfer({ recipient, amount });
+    return this.contract.transfer({
+      recipient,
+      amount: utils.format.parseNearAmount(amount) as BN,
+    });
   }
 
   depositMoney(amount: string): Promise<void> {

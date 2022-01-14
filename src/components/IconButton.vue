@@ -1,3 +1,7 @@
+<!--
+  IconButton
+-->
+
 <template>
   <button
     v-bind="$attrs"

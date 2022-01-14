@@ -1,7 +1,7 @@
-<documentation>
+<!--
   AccountRemoveWidget
   When AccountRows are selected, the DeleteButton will be shown.  Clicking the delete button opens a confirm dialog.
-</documentation>
+-->
 
 <script setup lang="ts">
   import { useI18n } from "vue-i18n";

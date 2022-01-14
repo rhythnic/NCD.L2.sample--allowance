@@ -1,7 +1,7 @@
-<documentation>
+<!--
   AccountList
   Used for Payer/Payee lists.  Shows AccountRows for each account ID, and a header with action buttons.
-</documentation>
+-->
 
 <script setup lang="ts">
   import { ref } from "vue";
@@ -101,7 +101,7 @@
                 <AmountWidget
                   :amount="slotProps.amount"
                   :show-actions="userIsOwner"
-                  :promise-tracker="slotProps.setBalanceStatus"
+                  :status="slotProps.setBalanceStatus"
                   :title="t('payer.setBalance')"
                   :confirm-label="t('actions.set')"
                   @set-amount="slotProps.handleSetBalance"
@@ -123,7 +123,7 @@
                 <AmountWidget
                   :amount="slotProps.amount"
                   :show-actions="userIsOwner"
-                  :promise-tracker="slotProps.setBalanceStatus"
+                  :status="slotProps.setBalanceStatus"
                   :title="t('payee.setBalance')"
                   :confirm-label="t('actions.set')"
                   @set-amount="slotProps.handleSetBalance"

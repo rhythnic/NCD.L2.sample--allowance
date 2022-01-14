@@ -1,7 +1,7 @@
-<documentation>
+<!--
   Alert that appears at the bottom center of page.
   Only success alerts supported for now.
-</documentation>
+-->
 
 <script setup lang="ts">
   import { watch } from "vue";

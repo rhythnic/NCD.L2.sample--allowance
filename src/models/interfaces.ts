@@ -12,8 +12,7 @@ export interface Wallet {
 
 export interface Account {
   accountId: string;
-  availableBalance: (fracDigits: number) => Promise<string>;
-  sendMoney: (recipient: string, amount: string) => Promise<void>;
+  availableBalance: () => Promise<string>;
 }
 
 export interface FundRegistryContract {
@@ -59,4 +58,3 @@ export interface FundContract {
 export type buildAccountType = (accountId: string) => Account;
 export type buildFundRegistryContractType = () => FundRegistryContract;
 export type buildFundContractType = (subaccount: string) => FundContract;
-
