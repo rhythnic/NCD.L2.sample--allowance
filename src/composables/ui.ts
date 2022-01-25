@@ -2,35 +2,67 @@
  * Composables for common UI state
  */
 
-import { ref } from "vue";
+import { ref, readonly, Ref, DeepReadonly } from "vue";
 
-export function useDialog() {
-  const isOpen = ref<boolean>(false);
+export function useState<T>(
+  initial: T,
+): [Ref<DeepReadonly<T>>, (arg0: T) => void] {
+  const state = ref(initial) as Ref<T>;
 
-  function show() {
-    isOpen.value = true;
+  function setState(val: T): void {
+    state.value = val;
   }
 
-  function hide() {
-    isOpen.value = false;
-  }
-
-  return {
-    isOpen,
-    show,
-    hide,
-  };
+  return [readonly(state), setState];
 }
 
-export function useEditMode() {
-  const editMode = ref<boolean>(false);
+export enum ActionStatus {
+  Ready,
+  Running,
+  LongRunning,
+  Succeeded,
+  Failed,
+}
 
-  function toggleEditMode() {
-    editMode.value = !editMode.value;
+interface UseActionOptions {
+  uiDelay?: number;
+}
+
+const defaultUseActionOptions = {
+  uiDelay: 1000,
+};
+
+export function useAction(opts: UseActionOptions = defaultUseActionOptions) {
+  const status = ref<ActionStatus>(ActionStatus.Ready);
+  const error = ref<Error | null>(null);
+
+  function track(promise: Promise<any>): Promise<any> {
+    status.value = ActionStatus.Running;
+    const timerId = setTimeout(() => {
+      status.value = ActionStatus.LongRunning;
+    }, opts.uiDelay);
+    return promise
+      .then((data) => {
+        clearTimeout(timerId);
+        status.value = ActionStatus.Succeeded;
+        return data;
+      })
+      .catch((error) => {
+        clearTimeout(timerId);
+        error.value = error;
+        status.value = ActionStatus.Failed;
+      });
+  }
+
+  function reset(): void {
+    status.value = ActionStatus.Ready;
+    error.value = null;
   }
 
   return {
-    editMode,
-    toggleEditMode,
+    status: readonly(status),
+    error: readonly(error),
+    track,
+    reset,
   };
 }

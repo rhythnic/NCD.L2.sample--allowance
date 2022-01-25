@@ -30,14 +30,15 @@
     <div class="mt-1">
       <input
         v-bind="$attrs"
+        :id="id"
         :value="modelValue"
         @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
         class="block w-full sm:text-sm rounded-md p-1 shadow-sm border border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500"
-        :aria-describedby="id ? `${id}-description` : ''"
+        :aria-describedby="`${id}-description`"
       />
     </div>
     <p
-      v-if="helpText && id"
+      v-if="helpText"
       :id="`${id}-description`"
       class="mt-2 text-sm text-gray-500"
     >

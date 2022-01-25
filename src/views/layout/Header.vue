@@ -4,9 +4,7 @@
 -->
 
 <script setup lang="ts">
-  import { inject } from "vue";
   import { useI18n } from "vue-i18n";
-  import { useRouter, useRoute } from "vue-router";
   import {
     Popover,
     PopoverButton,
@@ -19,13 +17,20 @@
   } from "@headlessui/vue";
   import { MenuIcon, XIcon } from "@heroicons/vue/outline";
   import { ChevronDownIcon } from "@heroicons/vue/solid";
-  import { Wallet } from "@/models/interfaces";
-  import { supportedLanguages } from "@/i18n";
-  import SignInButton from "@/components/NearSignInButton.vue";
-  import LocaleSelect from "@/components/LocaleSelect.vue";
+  import SignInButton from "@/providers/near/components/NearSignInButton.vue";
+  import LocaleSelect from "@/providers/i18n/components/LocaleSelect.vue";
+  import logoPng from "@/assets/logo.png";
 
-  const contractId = inject("contractId") as string;
-  const wallet = inject("wallet") as Wallet;
+  defineProps<{
+    locale: string;
+    accountId?: string;
+  }>();
+
+  const emit = defineEmits<{
+    (e: "signIn"): void;
+    (e: "signOut"): void;
+    (e: "selectLocale", locale: string): void;
+  }>();
 
   const { t } = useI18n({
     useScope: "global",
@@ -33,25 +38,6 @@
   });
 
   const authNotRequiredNavigation = [{ name: "nav.learn", href: "#" }];
-
-  const userNavigation = [{ name: "nav.settings", href: "#" }];
-
-  const accountId = wallet.getAccountId();
-  const router = useRouter();
-  const route = useRoute();
-
-  function handleSignOut(): void {
-    wallet.signOut();
-    router.push({ name: "home", params: { locale: route.params.locale } });
-  }
-
-  function handleLocaleSelect(locale: string): void {
-    router.push({ ...route, params: { ...route.params, locale } });
-  }
-
-  function signIn() {
-    wallet.requestSignIn({ contractId });
-  }
 </script>
 
 <template>
@@ -61,8 +47,8 @@
     >
       <!-- App Title Link -->
       <div class="flex justify-start lg:w-0 lg:flex-1">
-        <router-link :to="`/${route.params.locale}`" class="flex items-center">
-          <img src="@/assets/logo.png" class="w-16 h-16" alt="Allowance logo" />
+        <router-link :to="`/${locale}`" class="flex items-center">
+          <img :src="logoPng" class="w-16 h-16" alt="Allowance logo" />
           {{ t("app.title") }}
         </router-link>
       </div>
@@ -70,6 +56,7 @@
       <!-- Mobile Menu Buton -->
       <div class="-mr-2 -my-2 md:hidden">
         <PopoverButton
+          data-testid="mobileMenuButton"
           class="rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500"
         >
           <span class="sr-only">Open menu</span>
@@ -122,28 +109,14 @@
                 class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
               >
                 <div class="py-1">
-                  <MenuItem
-                    v-for="item in userNavigation"
-                    :key="item.name"
-                    v-slot="{ active }"
-                  >
-                    <a
-                      :href="item.href"
-                      :class="[
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-sm',
-                      ]"
-                    >
-                      {{ t(item.name) }}
-                    </a>
-                  </MenuItem>
                   <MenuItem v-slot="{ active }">
                     <button
-                      :class="[
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block w-full text-left px-4 py-2 text-sm',
-                      ]"
-                      @click="handleSignOut"
+                      :class="
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                      "
+                      class="block w-full text-left px-4 py-2 text-sm"
+                      data-testid="signOutDesktop"
+                      @click="emit('signOut')"
                     >
                       {{ t("wallet.signOut") }}
                     </button>
@@ -152,16 +125,22 @@
               </MenuItems>
             </transition>
           </Menu>
-          <SignInButton v-else />
+          <SignInButton
+            v-else
+            :title="t('wallet.signIn')"
+            @click="emit('signIn')"
+            data-testid="signInDesktop"
+            >{{ t("wallet.signIn") }}</SignInButton
+          >
         </div>
         <!-- END User Menu -->
         <!-- Desktop Language Selector -->
         <LocaleSelect
-          v-if="route.params.locale"
+          v-if="locale"
           class="ml-6"
-          :languages="supportedLanguages"
-          :selected-locale="(route.params.locale as string)"
-          @select="handleLocaleSelect"
+          :selected-locale="locale"
+          data-testid="localeSelectDesktop"
+          @select="(locale) => emit('selectLocale', locale)"
         />
         <!-- END Desktop Language Selector -->
       </div>
@@ -201,41 +180,38 @@
             </div>
           </div>
           <div class="py-6 px-5">
-            <!-- User Navigation -->
-            <div v-if="wallet.isSignedIn()" class="grid grid-cols-2 gap-4 mb-6">
-              <a
-                v-for="item in userNavigation"
-                :key="item.name"
-                :href="item.href"
-                class="text-base font-medium text-gray-900 hover:text-gray-700"
-              >
-                {{ t(item.name) }}
-              </a>
-            </div>
-            <!-- END User Navigation -->
             <!-- Sign IN/Out Buttons-->
             <div class="mb-6">
               <button
                 v-if="accountId"
                 class="text-base font-medium text-gray-900 hover:text-gray-700"
-                @click="handleSignOut"
+                data-testid="signOutMobile"
+                @click="emit('signOut')"
               >
                 {{ t("wallet.signOut") }}
               </button>
-              <SignInButton v-else :long="true" @click="signIn" />
+              <SignInButton
+                v-else
+                :long="true"
+                @click="emit('signIn')"
+                :title="t('wallet.signIn')"
+                data-testid="signInMobile"
+              >
+                {{ t("wallet.signIn") }}
+              </SignInButton>
             </div>
             <!-- END Sign IN/Out Buttons-->
-            <hr v-if="wallet.isSignedIn()" />
+            <hr v-if="!!accountId" />
             <!-- Mobile Language Select -->
             <LocaleSelect
-              v-if="route.params.locale"
+              v-if="locale"
               class="mt-4 mb-6"
-              :languages="supportedLanguages"
-              :selected-locale="(route.params.locale as string)"
-              @select="handleLocaleSelect"
+              :selected-locale="locale"
+              data-testid="localeSelectMobile"
+              @select="(locale) => emit('selectLocale', locale)"
             />
             <!-- END Mobile Language Select -->
-            <!-- Mobile Auth Not Required Navigation -->
+            <!-- Mobile Public Navigation -->
             <div class="mt-8 grid grid-cols-2 gap-4 pl-1">
               <a
                 v-for="item in authNotRequiredNavigation"
@@ -246,7 +222,7 @@
                 {{ t(item.name) }}
               </a>
             </div>
-            <!-- END Mobile Auth Not Required Navigation -->
+            <!-- END Mobile Public Navigation -->
           </div>
         </div>
       </PopoverPanel>

@@ -1,0 +1,64 @@
+{
+  "account": {
+    "amount": "양",
+    "balance": "잔고",
+    "id": "계정 ID",
+    "idsToAdd": "추가할 계정 ID",
+    "initialBalance": "초기 잔액",
+    "recipient": "수취인",
+    "sameInitialBalance": "추가 중인 모든 계정에 적용됩니다.",
+    "subaccount": "하위 계정"
+  },
+  "actions": {
+    "add": "더하기",
+    "cancel": "취소",
+    "confirm": "확인",
+    "create": "만들기",
+    "delete": "삭제하다",
+    "set": "마추다",
+    "transfer": "송금하다",
+    "transferMoney": "송금하다"
+  },
+  "app": {
+    "description": "이 앱으로 기금들에 돈을 낼 수 있는 받을 수 있는 계좌 놓고 송금액을 제한을 두다",
+    "taglinePt1": "통제된",
+    "taglinePt2": "송금하기",
+    "title": "용돈",
+    "transactionSucceeded": "트랜잭션 성공"
+  },
+
+  "fund": {
+    "create": "기금을 만들기",
+    "createFundPrompt": "기금을 만들어 한 명 이상의 회원에 대한 자금 관리를 시작하세요",
+    "depositMoney": "펀드에 예치",
+    "fund": "기금 | 기금들",
+    "loading": "기금들 받기 중",
+    "owner": "주인",
+    "setUnrestrictedBalance": "무제한의 돈을 맞추기",
+    "unrestrictedBalance": "무제한의 돈"
+  },
+  "i18n": {
+    "language": "국어"
+  },
+  "nav": {
+    "learn": "배우기"
+  },
+  "payee": {
+    "payee": "수취인 | 수취인들",
+    "add": "수취인을 추가하다",
+    "remove": "수취인을 해고하다",
+    "setBalance": "수취인 잔액 설정"
+  },
+  "payer": {
+    "payer": "송금할 사람 | 송금할 사람들",
+    "add": "송금할 사람들 추가하다",
+    "remove": "송금할 사람들 해고하다",
+    "setBalance": "송금할 사람 잔액 설정"
+  },
+  "wallet": {
+    "signIn": "로그인",
+    "signOut": "로그아웃",
+    "signInPrompt": "회원님의 자금을 보려면 로그인하십시오",
+    "supported": "지원되는 지갑"
+  }
+}

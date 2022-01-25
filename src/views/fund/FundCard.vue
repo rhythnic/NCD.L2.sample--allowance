@@ -10,11 +10,10 @@
 <script setup lang="ts">
   import { inject, onMounted, ref } from "vue";
   import { useI18n } from "vue-i18n";
-  import { PromiseTracker } from "@/models/promise-tracker";
-  import { buildAccountType, FundContract } from "@/models/interfaces";
-  import { useDialog } from "@/composables/ui";
-  import AmountWidget from "@/components/AmountWidget.vue";
+  import { buildAccountType, FundContract } from "@/interfaces";
+  import { useState, useAction } from "@/composables/ui";
   import TransferButton from "@/components/TransferButton.vue";
+  import AmountWidget from "./AmountWidget.vue";
   import TransferDialog from "./TransferDialog.vue";
   import AccountRow from "./AccountRow.vue";
 
@@ -33,26 +32,25 @@
   }>();
 
   // state
-  const accountAvailableBalance = ref("");
-  const transferToFundStatus = new PromiseTracker();
-  const setBalanceStatus = new PromiseTracker();
-  const transferDialog = useDialog();
+  const [availableBalance, setAvailableBalance] = useState("");
+  const [transferDialogOpen, setTransferDialogOpen] = useState(false);
+  const depositAction = useAction();
+  const setBalanceAction = useAction();
 
   const fundAccount = buildAccount(props.fund.contractId);
 
   const subaccount = props.fund.contractId.split(".")[0];
 
   onMounted(async () => {
-    accountAvailableBalance.value = await fundAccount.availableBalance();
-    console.log(accountAvailableBalance.value);
+    setAvailableBalance(await fundAccount.availableBalance());
   });
 
-  function handleTransferToFund(amount: string) {
-    transferToFundStatus.track(props.fund.depositMoney(amount));
+  function handleDeposit(amount: string) {
+    depositAction.track(props.fund.depositMoney(amount));
   }
 
   function handleSetBalance(amount: string) {
-    setBalanceStatus.track(props.fund.setUnrestrictedBalance(amount));
+    setBalanceAction.track(props.fund.setUnrestrictedBalance(amount));
   }
 </script>
 
@@ -80,26 +78,29 @@
         <!-- Fund Contract Available Balance Row -->
         <AccountRow :accountId="fund.contractId" :edit-mode="false">
           <AmountWidget
-            :amount="accountAvailableBalance"
+            :amount="availableBalance"
             :show-actions="userIsOwner"
-            :status="transferToFundStatus"
-            :title="t('fund.addMoney')"
+            :action-status="setBalanceAction.status"
+            :action-error="setBalanceAction.error"
+            :title="t('fund.depositMoney')"
             :confirm-label="t('actions.transfer')"
-            @set-amount="handleTransferToFund"
+            :input-label="t('account.amount')"
+            @set-amount="handleDeposit"
           />
         </AccountRow>
         <!-- END Fund Contract Available Balance Row -->
         <!-- Fund Unrestricted Balance Row -->
         <AccountRow :label="t('fund.unrestrictedBalance')" :edit-mode="false">
           <template v-slot:transfer-button>
-            <TransferButton @click="transferDialog.show" />
+            <TransferButton @click="setTransferDialogOpen(true)" />
           </template>
           <AmountWidget
             :amount="unrestrictedBalance"
             :show-actions="userIsOwner"
-            :status="setBalanceStatus"
+            :status="setBalanceAction"
             :title="t('fund.setUnrestrictedBalance')"
             :confirm-label="t('actions.set')"
+            :input-label="t('account.amount')"
             @set-amount="handleSetBalance"
           />
         </AccountRow>
@@ -110,8 +111,8 @@
 
     <TransferDialog
       :fund="fund"
-      :is-open="transferDialog.isOpen.value"
-      @close="transferDialog.hide"
+      :is-open="transferDialogOpen"
+      @close="setTransferDialogOpen(false)"
     />
   </section>
 </template>

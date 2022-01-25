@@ -5,22 +5,19 @@
 
 <script setup lang="ts">
   import { useI18n } from "vue-i18n";
+  import { useState } from "@/composables/ui";
   import DeleteButton from "@/components/DeleteButton.vue";
   import ActionDialog from "@/components/ActionDialog.vue";
-  import { useDialog } from "@/composables/ui";
-  import { PromiseTracker } from "@/models/promise-tracker";
 
-  const props = defineProps<{
-    title: string;
+  defineProps<{
     accountIds: string[];
-    removeStatus: PromiseTracker;
   }>();
 
   const emit = defineEmits<{
     (e: "confirm"): void;
   }>();
 
-  const dialog = useDialog();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const { t } = useI18n({
     useScope: "global",
@@ -29,14 +26,14 @@
 </script>
 
 <template>
-  <DeleteButton v-if="accountIds.length" @click="dialog.show" />
+  <DeleteButton v-if="accountIds.length" @click="setDialogOpen(true)" />
   <ActionDialog
-    :open="dialog.isOpen.value"
-    :status="removeStatus"
-    :title="title"
+    v-bind="$attrs"
+    :title="($attrs.title as string)"
+    :open="dialogOpen"
     :confirm-label="t('actions.delete')"
-    @cancel="dialog.hide"
-    @confirm="emit('confirm')"
+    :cancel-label="t('actions.cancel')"
+    @cancel="setDialogOpen(false)"
   >
     <ul class="m-4 list-disc">
       <li v-for="accountId in accountIds" :key="accountId">

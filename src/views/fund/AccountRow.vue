@@ -33,7 +33,6 @@
       return props.modelValue || [];
     },
     set(value: string[]) {
-      console.log("set", value);
       emit("update:modelValue", value);
     },
   });

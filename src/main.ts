@@ -8,9 +8,10 @@ globalThis.Buffer = Buffer;
 globalThis.global = globalThis;
 
 import { createApp } from "vue";
-import App from "./near-app/App.vue";
+import App from "./App.vue";
 import { router } from "./router";
-import { i18n } from "./i18n";
+import { createI18n } from "vue-i18n";
+import { vueI18nOptions } from "./providers/i18n/settings";
 import "./index.css";
 
-createApp(App).use(router).use(i18n).mount("#app");
+createApp(App).use(router).use(createI18n(vueI18nOptions)).mount("#app");

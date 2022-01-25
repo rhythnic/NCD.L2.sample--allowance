@@ -8,10 +8,11 @@
 <script setup lang="ts">
   import { reactive, watch } from "vue";
   import { useI18n } from "vue-i18n";
+  import { FundContract } from "@/interfaces";
+  import { useAction, ActionStatus } from "@/composables/ui";
   import ActionDialog from "@/components/ActionDialog.vue";
-  import { PromiseTracker } from "@/models/promise-tracker";
+  import NearInput from "@/providers/near/components/NearInput.vue";
   import TextField from "@/components/TextField.vue";
-  import { FundContract } from "@/models/interfaces";
 
   const { t } = useI18n({
     useScope: "global",
@@ -34,12 +35,14 @@
   });
 
   const state = reactive(defaultState());
-  const status = new PromiseTracker();
+  const transferAction = useAction();
 
   async function handleConfirm() {
     debugger;
-    await status.track(props.fund.transfer(state.recipient, state.amount));
-    if (status.succeeded) {
+    await transferAction.track(
+      props.fund.transfer(state.recipient, state.amount),
+    );
+    if (transferAction.status.value === ActionStatus.Succeeded) {
       emit("close");
     }
   }
@@ -55,9 +58,11 @@
 <template>
   <ActionDialog
     :open="isOpen"
-    :status="status"
+    :action-status="transferAction.status.value"
+    :action-error="transferAction.error.value"
     :title="t('actions.transferMoney')"
     :confirm-label="t('actions.transfer')"
+    :cancel-label="t('actions.cancel')"
     @confirm="handleConfirm"
     @cancel="emit('close')"
   >
@@ -69,7 +74,7 @@
       :placeholder="t('account.id')"
       :disabled="recipient"
     />
-    <TextField
+    <NearInput
       class="mt-4"
       :label="t('account.amount')"
       id="amount"

@@ -1,18 +1,16 @@
 <!--
   ErrorMessage
-  Uses a PromiseTracker to show an error message if an async request fails
+  Show the message of the error prop in red text
 -->
 
 <script setup lang="ts">
-  import { PromiseTracker } from "@/models/promise-tracker";
-
   const props = defineProps<{
-    status?: PromiseTracker;
+    error?: Error | null;
   }>();
 </script>
 
 <template>
-  <p v-if="status?.failed" class="text-red-600">
-    {{ status.error?.message }}
+  <p v-if="error" class="text-red-600">
+    {{ error?.message }}
   </p>
 </template>

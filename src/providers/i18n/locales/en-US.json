@@ -1,0 +1,64 @@
+{
+  "account": {
+    "amount": "Amount",
+    "balance": "Balance",
+    "id": "Account ID",
+    "idsToAdd": "Account IDs to add",
+    "initialBalance": "Initial Balance",
+    "recipient": "Recipient",
+    "sameInitialBalance": "Applies to all accounts being added",
+    "subaccount": "Subaccount"
+  },
+  "actions": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "create": "Create",
+    "delete": "Delete",
+    "set": "Set",
+    "transfer": "Transfer",
+    "transferMoney": "Transfer Money"
+  },
+  "app": {
+    "description": "With Allowance, you can setup funds with authorized senders, recipients, and spending limits",
+    "taglinePt1": "Funds with",
+    "taglinePt2": "transfer controls",
+    "title": "Allowance",
+    "transactionSucceeded": "Transaction Succeeded"
+  },
+
+  "fund": {
+    "create": "Create Fund",
+    "createFundPrompt": "Create a fund to start managing money for one or more members",
+    "depositMoney": "Deposit Money in Fund",
+    "fund": "Fund | Funds",
+    "loading": "Loading funds",
+    "owner": "Owner",
+    "setUnrestrictedBalance": "Set Unrestricted Balance",
+    "unrestrictedBalance": "Unrestricted Balance"
+  },
+  "i18n": {
+    "language": "Language"
+  },
+  "nav": {
+    "learn": "Learn"
+  },
+  "payee": {
+    "payee": "Payee | Payees",
+    "add": "Add Payees",
+    "remove": "Remove Payees",
+    "setBalance": "Set Payee Balance"
+  },
+  "payer": {
+    "payer": "Payer | Payers",
+    "add": "Add Payers",
+    "remove": "Remove Payers",
+    "setBalance": "Set Payer Balance"
+  },
+  "wallet": {
+    "signIn": "Sign In",
+    "signOut": "Sign out",
+    "signInPrompt": "Sign in with NEAR Wallet to get started",
+    "supported": "Supported Wallets"
+  }
+}

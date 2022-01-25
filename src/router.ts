@@ -1,15 +1,16 @@
 /**
  * Router
- * Route guards are done in the components, where there is access to providers
  * All routes should be children of the /:locale path
  */
 
 import { createRouter, createWebHashHistory, RouteLocation } from "vue-router";
-import LocaleContainer from "./views/locale/LocaleContainer.vue";
+import Layout from "./views/layout/Layout.vue";
 import HomeView from "./views/home/Home.vue";
 import FundRegistryView from "./views/fund-registry/FundRegistry.vue";
 import FundView from "./views/fund/Fund.vue";
-import { INITIAL_LOCALE, supportedLocales } from "./i18n";
+import { supportedLocales } from "./providers/i18n/settings";
+import { INITIAL_LOCALE } from "@/env/variables";
+import { wallet } from "./providers/near/near-service";
 
 const routes = [
   {
@@ -19,7 +20,7 @@ const routes = [
   },
   {
     path: "/:locale",
-    component: LocaleContainer,
+    component: Layout,
     beforeEnter: (to: RouteLocation) => {
       if (!supportedLocales.includes(to.params.locale as string)) {
         return `/${INITIAL_LOCALE}`;
@@ -30,15 +31,20 @@ const routes = [
         name: "home",
         path: "",
         component: HomeView,
+        beforeEnter: (to: RouteLocation) => {
+          if (wallet.isSignedIn()) return { name: "funds", params: to.params };
+        },
       },
       {
         name: "funds",
         path: "funds",
+        props: true,
         component: FundRegistryView,
       },
       {
         name: "fund",
         path: "funds/:subaccount",
+        props: true,
         component: FundView,
       },
     ],
@@ -48,4 +54,10 @@ const routes = [
 export const router = createRouter({
   history: createWebHashHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const homePath = `/${to.params.locale}`;
+  if (to.path !== homePath && !wallet.isSignedIn()) next({ path: homePath });
+  else next();
 });

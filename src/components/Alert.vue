@@ -4,7 +4,7 @@
 -->
 
 <script setup lang="ts">
-  import { watch } from "vue";
+  import { watch, onMounted } from "vue";
   import { CheckCircleIcon, XIcon } from "@heroicons/vue/solid";
   import { TransitionRoot } from "@headlessui/vue";
 
@@ -21,14 +21,17 @@
     emit("update:modelValue", false);
   }
 
-  watch(
-    () => props.modelValue,
-    (show) => {
-      if (show && props.ttl) {
-        setTimeout(closeAlert, props.ttl);
-      }
-    },
-  );
+  function closeAlertAfterDelay(show: boolean) {
+    if (show && props.ttl) {
+      setTimeout(closeAlert, props.ttl);
+    }
+  }
+
+  watch(() => props.modelValue, closeAlertAfterDelay);
+
+  onMounted(() => {
+    closeAlertAfterDelay(props.modelValue);
+  });
 </script>
 
 <template>
@@ -62,6 +65,7 @@
                 type="button"
                 @click="closeAlert"
                 class="inline-flex bg-green-50 rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600"
+                data-testid="dismiss-btn"
               >
                 <span class="sr-only">Dismiss</span>
                 <XIcon class="h-5 w-5" aria-hidden="true" />

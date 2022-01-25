@@ -8,39 +8,123 @@
 -->
 
 <script setup lang="ts">
-  import { FundContract } from "@/models/interfaces";
-  import { PromiseTracker } from "@/models/promise-tracker";
   import { onMounted, ref } from "vue";
+  import { useI18n } from "vue-i18n";
+  import { FundContract } from "@/interfaces";
+  import { useState, useAction } from "@/composables/ui";
+  import TransferButton from "@/components/TransferButton.vue";
+  import AccountAddWidget from "./AccountAddWidget.vue";
+  import AccountRemoveWidget from "./AccountRemoveWidget.vue";
+  import AccountRow from "./AccountRow.vue";
+  import PayeeRow from "./PayeeRow.vue";
+  import AmountWidget from "./AmountWidget.vue";
+  import AccountListHeader from "./AccountListHeader.vue";
+  import TransferDialog from "./TransferDialog.vue";
+
+  const { t } = useI18n({
+    useScope: "global",
+    inheritLocale: true,
+  });
 
   const props = defineProps<{
     fund: FundContract;
+    userIsOwner: boolean;
   }>();
 
-  const payeeIndex = ref([]);
-  const loadStatus = new PromiseTracker();
-  const createPayeesStatus = new PromiseTracker();
-  const deletePayeesStatus = new PromiseTracker();
+  const [payeeIndex, setPayeeIndex] = useState<string[]>([]);
+  const [editMode, setEditMode] = useState(false);
+  const [transferDialogOpen, setTransferDialogOpen] = useState(false);
+  const [recipient, setRecipient] = useState("");
+  const accountsToRemove = ref([]);
+  const loadAction = useAction();
+  const createAction = useAction();
+  const deleteAction = useAction();
 
   onMounted(async () => {
-    const result = await loadStatus.track(props.fund.getPayees());
-    payeeIndex.value = result;
+    const result = await loadAction.track(props.fund.getPayees());
+    setPayeeIndex(result);
   });
 
   function handleCreatePayees(accountIds: string[], balance: string): void {
-    createPayeesStatus.track(props.fund.createPayees(accountIds, balance));
+    createAction.track(props.fund.createPayees(accountIds, balance));
   }
 
-  function handleDeletePayees(accountIds: string[]): void {
-    deletePayeesStatus.track(props.fund.deletePayees(accountIds));
+  function handleDeletePayees(): void {
+    deleteAction.track(props.fund.deletePayees(accountsToRemove.value));
+  }
+
+  function handleSetEdit(editMode: boolean) {
+    accountsToRemove.value = [];
+    setEditMode(editMode);
+  }
+
+  function handleShowTransfer(payeeAccountId: string) {
+    setRecipient(payeeAccountId);
+    setTransferDialogOpen(true);
   }
 </script>
 
 <template>
-  <slot
-    :accountIds="payeeIndex"
-    :add-status="createPayeesStatus"
-    :remove-status="deletePayeesStatus"
-    :handle-add-accounts="handleCreatePayees"
-    :handle-remove-accounts="handleDeletePayees"
-  ></slot>
+  <section>
+    <!-- List header -->
+    <AccountListHeader
+      :title="t('payee.payee', 2)"
+      :edit-mode="editMode"
+      @set-edit-mode="handleSetEdit"
+    >
+      <template v-slot:actions>
+        <AccountRemoveWidget
+          :title="t('payee.remove')"
+          :account-ids="accountsToRemove"
+          @confirm="handleDeletePayees"
+          :action-status="deleteAction.status"
+          :action-error="deleteAction.error"
+        />
+        <AccountAddWidget
+          :title="t('payee.add')"
+          :edit-mode="editMode"
+          :action-status="deleteAction.status"
+          :action-error="deleteAction.error"
+          @add-accounts="handleCreatePayees"
+        />
+      </template>
+    </AccountListHeader>
+    <div class="flow-root">
+      <ul role="list" class="divide-y divide-gray-200">
+        <PayeeRow
+          v-for="accountId in payeeIndex"
+          :fund="fund"
+          :account-id="accountId"
+        >
+          <template v-slot:default="slotProps">
+            <AccountRow
+              :accountId="accountId"
+              :edit-mode="editMode"
+              v-model="accountsToRemove"
+            >
+              <template v-slot:transfer-button>
+                <TransferButton @click="handleShowTransfer(accountId)" />
+              </template>
+              <AmountWidget
+                :amount="slotProps.amount"
+                :show-actions="userIsOwner"
+                :action-status="slotProps.actionStatus"
+                :action-error="slotProps.actionError"
+                :title="t('payee.setBalance')"
+                :confirm-label="t('actions.set')"
+                :input-label="t('account.amount')"
+                @set-amount="slotProps.handleSetBalance"
+              />
+            </AccountRow>
+          </template>
+        </PayeeRow>
+      </ul>
+    </div>
+    <TransferDialog
+      :fund="fund"
+      :is-open="transferDialogOpen"
+      @close="setTransferDialogOpen(false)"
+      :recipient="recipient"
+    />
+  </section>
 </template>

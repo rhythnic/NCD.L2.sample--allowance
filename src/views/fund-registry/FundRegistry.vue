@@ -8,10 +8,10 @@
 <script setup lang="ts">
   import { inject, onMounted, ref } from "vue";
   import { useI18n } from "vue-i18n";
-  import { useRoute } from "vue-router";
-  import { Wallet, buildFundRegistryContractType } from "@/models/interfaces";
-  import { PromiseTracker } from "@/models/promise-tracker";
+  import { Wallet, buildFundRegistryContractType } from "@/interfaces";
+  import { useAction, ActionStatus } from "@/composables/ui";
   import Loading from "@/components/Loading.vue";
+  import ErrorMessage from "@/components/ErrorMessage.vue";
   import CreateFundWidget from "./CreateFundWidget.vue";
 
   const { t } = useI18n({
@@ -19,20 +19,24 @@
     inheritLocale: true,
   });
 
+  const contractId = inject("contractId") as string;
   const wallet = inject("wallet") as Wallet;
+
+  defineProps<{
+    locale: string;
+  }>();
 
   const buildFundRegistryContract = inject(
     "buildFundRegistryContract",
   ) as buildFundRegistryContractType;
 
-  const route = useRoute();
-  const loadStatus = new PromiseTracker();
+  const loadAction = useAction();
   const fundIndex = ref([]);
 
-  const fundRegistry = buildFundRegistryContract();
+  const fundRegistry = buildFundRegistryContract(contractId);
 
   onMounted(async () => {
-    fundIndex.value = await loadStatus.track(
+    fundIndex.value = await loadAction.track(
       fundRegistry.getFundIndex(wallet.getAccountId()),
     );
   });
@@ -44,22 +48,20 @@
     <div class="bg-white rounded p-4">
       <!-- Header -->
       <div class="flex items-center border-b mb-4 pb-1">
-        <h2 class="flex-1">{{ t("fund.managedFunds") }}</h2>
+        <h2 class="flex-1">{{ t("fund.fund", 2) }}</h2>
         <CreateFundWidget :fund-registry="fundRegistry" />
       </div>
       <!-- END Header -->
       <!-- Loading -->
-      <div v-if="loadStatus.isLongRunning">
+      <div v-if="loadAction.status.value === ActionStatus.LongRunning">
         <Loading>
           <span class="mt-2">{{ t("fund.loading") }}</span>
         </Loading>
       </div>
       <!-- END Loading -->
       <!-- Loading Error -->
-      <div v-else-if="loadStatus.failed">
-        <p class="text-red-500">
-          {{ (loadStatus.error as Error).toString() }}
-        </p>
+      <div v-else-if="loadAction.error.value">
+        <ErrorMessage :error="loadAction.error.value" />
       </div>
       <!-- END Loading Error -->
       <!-- Fund List -->
@@ -68,7 +70,7 @@
           <router-link
             v-for="subaccount in fundIndex"
             :key="subaccount"
-            :to="{ name: 'fund', params: { ...route.params, subaccount } }"
+            :to="{ name: 'fund', params: { locale, subaccount } }"
           >
             <li class="text-sm text-gray-500">
               {{ `${subaccount}.${fundRegistry.contractId}` }}
@@ -80,7 +82,7 @@
       <!-- No Funds Prompt -->
       <div v-else>
         <p class="text-lg text-gray-500 text-center mt-6">
-          {{ t("fund.noFundsPrompt") }}
+          {{ t("fund.createFundPrompt") }}
         </p>
       </div>
       <!-- END No Funds Prompt -->

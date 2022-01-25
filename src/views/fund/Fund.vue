@@ -6,34 +6,37 @@
 -->
 
 <script setup lang="ts">
-  import { inject, computed, onMounted, ref } from "vue";
-  import { useRoute } from "vue-router";
-  import { Wallet, buildFundContractType, UserRole } from "@/models/interfaces";
-  import { PromiseTracker } from "@/models/promise-tracker";
-  import AccountList from "./AccountList.vue";
+  import { inject, computed, onMounted } from "vue";
+  import { Wallet, buildFundContractType } from "@/interfaces";
+  import { useAction, useState } from "@/composables/ui";
   import FundCard from "./FundCard.vue";
   import PayerList from "./PayerList.vue";
   import PayeeList from "./PayeeList.vue";
 
+  const parentContractId = inject("contractId") as string;
   const wallet = inject("wallet") as Wallet;
   const buildFundContract = inject(
     "buildFundContract",
   ) as buildFundContractType;
 
-  const route = useRoute();
+  const props = defineProps<{
+    subaccount: string;
+  }>();
+
   const accountId = wallet.getAccountId();
-  const loadStatus = new PromiseTracker();
-  const owner = ref("");
-  const unrestrictedBalance = ref("");
+  const loadAction = useAction();
+  const [owner, setOwner] = useState("");
+  const [unrestrictedBalance, setUnrestrictedBalance] = useState("");
 
   const userIsOwner = computed(() => owner.value === accountId);
 
-  const fund = buildFundContract(route.params.subaccount as string);
+  const contractId = `${props.subaccount}.${parentContractId}`;
+  const fund = buildFundContract(contractId);
 
   onMounted(async () => {
-    const result = await loadStatus.track(fund.getFund());
-    owner.value = result.owner;
-    unrestrictedBalance.value = result.unrestricted_balance;
+    const result = await loadAction.track(fund.getFund());
+    setOwner(result.owner);
+    setUnrestrictedBalance(result.unrestricted_balance);
   });
 </script>
 
@@ -48,45 +51,19 @@
       :unrestricted-balance="unrestrictedBalance"
       :user-is-owner="userIsOwner"
     />
-    <!-- Payers List -->
     <div class="lg:col-start-1 lg:col-span-1">
-      <PayerList :fund="fund">
-        <template v-slot:default="slotProps">
-          <AccountList
-            class="bg-white rounded-lg"
-            :role="UserRole.Payer"
-            :title="'Payers'"
-            :accountIds="slotProps.accountIds"
-            :fund="fund"
-            :user-is-owner="userIsOwner"
-            :add-status="slotProps.addStatus"
-            :remove-status="slotProps.removeStatus"
-            @add-accounts="slotProps.handleAddAccounts"
-            @remove-accounts="slotProps.handleRemoveAccounts"
-          />
-        </template>
-      </PayerList>
+      <PayerList
+        class="bg-white rounded-lg"
+        :fund="fund"
+        :user-is-owner="userIsOwner"
+      />
     </div>
-    <!-- END Payers List -->
-    <!-- Payees List -->
     <div class="lg:col-start-2 lg:col-span-1">
-      <PayeeList :fund="fund">
-        <template v-slot:default="slotProps">
-          <AccountList
-            class="bg-white rounded-lg"
-            :role="UserRole.Payee"
-            :title="'Payees'"
-            :accountIds="slotProps.accountIds"
-            :fund="fund"
-            :user-is-owner="userIsOwner"
-            :add-status="slotProps.addStatus"
-            :remove-status="slotProps.removeStatus"
-            @add-accounts="slotProps.handleAddAccounts"
-            @remove-accounts="slotProps.handleRemoveAccounts"
-          />
-        </template>
-      </PayeeList>
+      <PayeeList
+        class="bg-white rounded-lg"
+        :fund="fund"
+        :user-is-owner="userIsOwner"
+      />
     </div>
-    <!-- END Payees List -->
   </div>
 </template>

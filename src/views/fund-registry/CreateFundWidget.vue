@@ -8,9 +8,8 @@
 <script setup lang="ts">
   import { inject, computed, ref } from "vue";
   import { useI18n } from "vue-i18n";
-  import { FundRegistryContract } from "@/models/interfaces";
-  import { PromiseTracker } from "@/models/promise-tracker";
-  import { useDialog } from "@/composables/ui";
+  import { FundRegistryContract } from "@/interfaces";
+  import { useAction, useState } from "@/composables/ui";
   import AddButton from "@/components/AddButton.vue";
   import ActionDialog from "@/components/ActionDialog.vue";
   import TextField from "@/components/TextField.vue";
@@ -26,8 +25,8 @@
     fundRegistry: FundRegistryContract;
   }>();
 
-  const createFundStatus = new PromiseTracker();
-  const dialog = useDialog();
+  const createFundAction = useAction();
+  const [dialogOpen, setDialogOpen] = useState(false);
   const subaccount = ref("");
 
   const helpText = computed(() =>
@@ -36,28 +35,30 @@
 
   function handleCancel() {
     subaccount.value = "";
-    dialog.hide();
+    setDialogOpen(false);
   }
 
   function handleConfirm() {
-    createFundStatus.track(props.fundRegistry.createFund(subaccount.value));
+    createFundAction.track(props.fundRegistry.createFund(subaccount.value));
   }
 </script>
 
 <template>
-  <AddButton @click="dialog.show" />
+  <AddButton @click="setDialogOpen(true)" />
   <ActionDialog
-    :open="dialog.isOpen.value"
-    :status="createFundStatus"
+    :open="dialogOpen"
+    :action-status="createFundAction.status.value"
+    :action-error="createFundAction.error.value"
     :title="t('fund.create')"
     :confirm-label="t('actions.create')"
+    :cancel-label="t('actions.cancel')"
     :disable-confirm="!subaccount"
     @confirm="handleConfirm"
     @cancel="handleCancel"
   >
     <TextField
       id="subaccount"
-      :label="t('fund.subaccount')"
+      :label="t('account.subaccount')"
       v-model="subaccount"
       :help-text="helpText"
       name="subaccount"

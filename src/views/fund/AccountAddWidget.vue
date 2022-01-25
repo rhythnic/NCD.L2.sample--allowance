@@ -5,27 +5,24 @@
 -->
 
 <script setup lang="ts">
-  import { reactive, watch } from "vue";
+  import { reactive } from "vue";
   import { useI18n } from "vue-i18n";
+  import { UserAddIcon } from "@heroicons/vue/solid";
+  import { useState } from "@/composables/ui";
   import AddButton from "@/components/AddButton.vue";
   import ActionDialog from "@/components/ActionDialog.vue";
-  import { useDialog } from "@/composables/ui";
-  import { UserAddIcon } from "@heroicons/vue/solid";
-  import StringListBuilder from "@/components/StringListBuilder.vue";
-  import { PromiseTracker } from "@/models/promise-tracker";
-  import TextField from "@/components/TextField.vue";
+  import TestListInput from "@/components/TestListInput.vue";
+  import NearInput from "@/providers/near/components/NearInput.vue";
 
-  const props = defineProps<{
-    title: string;
+  defineProps<{
     editMode: boolean;
-    addStatus: PromiseTracker;
   }>();
 
   const emit = defineEmits<{
     (e: "add-accounts", accountIds: string[], balance: string): void;
   }>();
 
-  const dialog = useDialog();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const initialState = {
     accountsToAdd: [],
@@ -40,45 +37,40 @@
 
   function handleCancel() {
     Object.assign(state, initialState);
-    dialog.hide();
+    setDialogOpen(false);
   }
 
   const { t } = useI18n({
     useScope: "global",
     inheritLocale: true,
   });
-
-  watch(
-    () => props.addStatus.succeeded,
-    (succeeded) => {
-      if (succeeded) handleCancel();
-    },
-  );
 </script>
 
 <template>
-  <AddButton v-if="editMode" class="ml-4" @click="dialog.show" />
+  <AddButton v-if="editMode" class="ml-4" @click="setDialogOpen(true)" />
   <ActionDialog
-    :open="dialog.isOpen.value"
-    :status="addStatus"
-    :title="title"
+    v-bind="$attrs"
+    :title="($attrs.title as string)"
+    :open="dialogOpen"
     :confirm-label="t('actions.add')"
+    :cancel-label="t('actions.cancel')"
     :disable-confirm="!state.accountsToAdd.length"
     @cancel="handleCancel"
     @confirm="handleConfirm"
+    @done="handleCancel"
   >
-    <StringListBuilder
+    <TestListInput
       class="mt-4"
-      :text-label="t('account.id')"
-      :text-placeholder="t('account.id')"
+      :label="t('account.id')"
+      :placeholder="t('account.id')"
       :list-title="t('account.idsToAdd')"
       v-model="state.accountsToAdd"
     >
       <template v-slot:addBtnIcon>
         <UserAddIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
       </template>
-    </StringListBuilder>
-    <TextField
+    </TestListInput>
+    <NearInput
       class="mt-4"
       :label="t('account.initialBalance')"
       :help-text="t('account.sameInitialBalance')"
