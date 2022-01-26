@@ -8,6 +8,7 @@ import Layout from "./views/layout/Layout.vue";
 import HomeView from "./views/home/Home.vue";
 import FundRegistryView from "./views/fund-registry/FundRegistry.vue";
 import FundView from "./views/fund/Fund.vue";
+import LearnView from "./views/learn/Learn.vue";
 import { supportedLocales } from "./providers/i18n/settings";
 import { INITIAL_LOCALE } from "@/env/variables";
 import { wallet } from "./providers/near/near-service";
@@ -36,15 +37,26 @@ const routes = [
         },
       },
       {
+        name: "learn",
+        path: "learn",
+        component: LearnView
+      },
+      {
         name: "funds",
         path: "funds",
         props: true,
+        meta: {
+          requireAuth: true
+        },
         component: FundRegistryView,
       },
       {
         name: "fund",
         path: "funds/:subaccount",
         props: true,
+        meta: {
+          requireAuth: true
+        },
         component: FundView,
       },
     ],
@@ -58,6 +70,6 @@ export const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const homePath = `/${to.params.locale}`;
-  if (to.path !== homePath && !wallet.isSignedIn()) next({ path: homePath });
+  if (to.meta.requireAuth && !wallet.isSignedIn()) next({ path: homePath });
   else next();
 });

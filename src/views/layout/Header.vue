@@ -37,7 +37,7 @@
     inheritLocale: true,
   });
 
-  const authNotRequiredNavigation = [{ name: "nav.learn", href: "#" }];
+  const authNotRequiredNavigation = [{ label: "nav.learn", to: { name: 'learn' } }];
 </script>
 
 <template>
@@ -66,14 +66,14 @@
       <!-- END Mobile Menu Buton -->
       <!-- Desktop Auth Not Required Navigation -->
       <PopoverGroup as="nav" class="hidden md:flex space-x-10">
-        <a
+        <router-link
           v-for="item in authNotRequiredNavigation"
-          :key="item.name"
-          :href="item.href"
+          :key="item.label"
+          :to="item.to"
           class="text-base font-medium text-gray-500 hover:text-gray-900"
         >
-          {{ t(item.name) }}
-        </a>
+          {{ t(item.label) }}
+        </router-link>
       </PopoverGroup>
       <!-- END Desktop Auth Not Required Navigation -->
       <!-- Desktop Top Right -->
@@ -213,14 +213,14 @@
             <!-- END Mobile Language Select -->
             <!-- Mobile Public Navigation -->
             <div class="mt-8 grid grid-cols-2 gap-4 pl-1">
-              <a
+              <router-link
                 v-for="item in authNotRequiredNavigation"
-                :key="item.name"
-                :href="item.href"
+                :key="item.label"
+                :to="item.to"
                 class="text-base font-medium text-gray-900 hover:text-gray-700"
               >
-                {{ t(item.name) }}
-              </a>
+                {{ t(item.label) }}
+              </router-link>
             </div>
             <!-- END Mobile Public Navigation -->
           </div>
