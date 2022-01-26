@@ -13,13 +13,14 @@
   import { FundContract } from "@/interfaces";
   import { useState, useAction } from "@/composables/ui";
   import TransferButton from "@/components/TransferButton.vue";
+  import Checkbox from '@/components/Checkbox.vue';
   import AccountAddWidget from "./AccountAddWidget.vue";
   import AccountRemoveWidget from "./AccountRemoveWidget.vue";
   import AccountRow from "./AccountRow.vue";
   import PayeeRow from "./PayeeRow.vue";
   import AmountWidget from "./AmountWidget.vue";
-  import AccountListHeader from "./AccountListHeader.vue";
   import TransferDialog from "./TransferDialog.vue";
+  import SelectableListHeader from '@/components/SelectableListHeader.vue';
 
   const { t } = useI18n({
     useScope: "global",
@@ -35,7 +36,7 @@
   const [editMode, setEditMode] = useState(false);
   const [transferDialogOpen, setTransferDialogOpen] = useState(false);
   const [recipient, setRecipient] = useState("");
-  const accountsToRemove = ref([]);
+  const accountsToRemove = ref<string[]>([]);
   const loadAction = useAction();
   const createAction = useAction();
   const deleteAction = useAction();
@@ -67,12 +68,12 @@
 <template>
   <section>
     <!-- List header -->
-    <AccountListHeader
+    <SelectableListHeader
       :title="t('payee.payee', 2)"
-      :edit-mode="editMode"
-      @set-edit-mode="handleSetEdit"
+      :model-value="editMode"
+      @update:model-value="handleSetEdit"
     >
-      <template v-slot:actions>
+      <template v-slot:editModeContent>
         <AccountRemoveWidget
           :title="t('payee.remove')"
           :account-ids="accountsToRemove"
@@ -88,7 +89,10 @@
           @add-accounts="handleCreatePayees"
         />
       </template>
-    </AccountListHeader>
+      <template slot:viewModeContent>
+        <span>{{ t("account.balance") }}</span>
+      </template>
+    </SelectableListHeader>
     <div class="flow-root">
       <ul role="list" class="divide-y divide-gray-200">
         <PayeeRow
@@ -98,10 +102,13 @@
         >
           <template v-slot:default="slotProps">
             <AccountRow
-              :accountId="accountId"
+              :label="accountId"
               :edit-mode="editMode"
               v-model="accountsToRemove"
             >
+              <template v-slot:checkbox>
+                <Checkbox v-if="editMode" class="mr-4" v-model="accountsToRemove" :value="accountId" />
+              </template>
               <template v-slot:transfer-button>
                 <TransferButton @click="handleShowTransfer(accountId)" />
               </template>

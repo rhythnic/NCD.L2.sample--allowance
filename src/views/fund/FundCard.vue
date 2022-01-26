@@ -76,7 +76,7 @@
     <div class="border-t border-gray-200">
       <div class="divide-y divide-gray-200">
         <!-- Fund Contract Available Balance Row -->
-        <AccountRow :accountId="fund.contractId" :edit-mode="false">
+        <AccountRow :label="fund.contractId" :edit-mode="false">
           <AmountWidget
             :amount="availableBalance"
             :show-actions="userIsOwner"

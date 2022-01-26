@@ -28,6 +28,7 @@
   },
 
   "fund": {
+    "confirmDelete": "Do you want to delete this fund?",
     "create": "Create Fund",
     "createFundPrompt": "Create a fund to start managing money for one or more members",
     "depositMoney": "Deposit Money in Fund",

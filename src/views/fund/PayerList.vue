@@ -12,12 +12,14 @@
   import { useI18n } from "vue-i18n";
   import { FundContract } from "@/interfaces";
   import { useState, useAction } from "@/composables/ui";
+  import SelectableListHeader from "@/components/SelectableListHeader.vue";
+  import Checkbox from '@/components/Checkbox.vue';
   import AccountAddWidget from "./AccountAddWidget.vue";
   import AccountRemoveWidget from "./AccountRemoveWidget.vue";
   import AccountRow from "./AccountRow.vue";
   import PayerRow from "./PayerRow.vue";
   import AmountWidget from "./AmountWidget.vue";
-  import AccountListHeader from "./AccountListHeader.vue";
+
 
   const { t } = useI18n({
     useScope: "global",
@@ -31,7 +33,7 @@
 
   const [payerIndex, setPayerIndex] = useState<string[]>([]);
   const [editMode, setEditMode] = useState(false);
-  const accountsToRemove = ref([]);
+  const accountsToRemove = ref<string[]>([]);
   const loadAction = useAction();
   const createAction = useAction();
   const deleteAction = useAction();
@@ -58,12 +60,12 @@
 <template>
   <section>
     <!-- List header -->
-    <AccountListHeader
+    <SelectableListHeader
       :title="t('payer.payer', 2)"
-      :edit-mode="editMode"
-      @set-edit-mode="handleSetEdit"
+      :model-value="editMode"
+      @update:model-value="handleSetEdit"
     >
-      <template v-slot:actions>
+      <template v-slot:editModeContent>
         <AccountRemoveWidget
           :title="t('payer.remove')"
           :account-ids="accountsToRemove"
@@ -79,7 +81,10 @@
           @add-accounts="handleCreatePayers"
         />
       </template>
-    </AccountListHeader>
+      <template slot:viewModeContent>
+        <span>{{ t("account.balance") }}</span>
+      </template>
+    </SelectableListHeader>
     <div class="flow-root">
       <ul role="list" class="divide-y divide-gray-200">
         <PayerRow
@@ -88,11 +93,10 @@
           :account-id="accountId"
         >
           <template v-slot:default="slotProps">
-            <AccountRow
-              :accountId="accountId"
-              :edit-mode="editMode"
-              v-model="accountsToRemove"
-            >
+            <AccountRow :label="accountId" :edit-mode="editMode">
+              <template v-slot:checkbox>
+                <Checkbox v-if="editMode" class="mr-4" v-model="accountsToRemove" :value="accountId" />
+              </template>
               <AmountWidget
                 :amount="slotProps.amount"
                 :show-actions="userIsOwner"

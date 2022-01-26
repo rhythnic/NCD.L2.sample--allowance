@@ -1,5 +1,5 @@
 <!--
-  AccountRow
+  SelectableListRow
   A row in the AccountList
   Shows account ID or label, a transfer money button (used for payees and to deposit mooney to contract),
   and a balance associated with the account.  The balance uses a widget so users can interact with the balance.
@@ -15,36 +15,40 @@
 -->
 
 <script setup lang="ts">
-  import SelectableListRow from '@/components/SelectableListRow.vue';
   import { computed } from "vue";
 
   const props = defineProps<{
-    label?: string;
+    editMode: boolean;
+    modelValue?: string[];
+    value: string;
   }>();
+
+  const emit = defineEmits<{
+    (e: "update:modelValue", selected: string[]): void;
+  }>();
+
+  const selectedAccounts = computed({
+    get() {
+      return props.modelValue || [];
+    },
+    set(value: string[]) {
+      emit("update:modelValue", value);
+    },
+  });
 </script>
 
 <template>
   <li class="flex items-center pl-4 py-2">
-    <slot name="checkbox"></slot>
-    <!-- Label -->
-    <div class="py-2 text-sm flex-auto sm:basis-auto">
-      <span class="font-medium text-gray-600">
-        {{ label }}
-      </span>
+    <!-- Checkbox -->
+    <div v-if="editMode" class="mr-4">
+      <input
+        v-model="selectedAccounts"
+        :value="value"
+        type="checkbox"
+        class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded mt-0"
+      />
     </div>
-    <!-- END Label -->
-    <div class="flex justify-end mt-2 sm:mt-0 flex-1 sm:flex-0">
-      <!-- Transfer Button -->
-      <div class="mr-4 sm:mr-16">
-        <slot name="transfer-button"></slot>
-      </div>
-      <!-- END Transfer Button -->
-
-      <!-- AmountWidget -->
-      <div class="mx-2">
-        <slot></slot>
-      </div>
-      <!-- END Amount Widet -->
-    </div>
+    <!-- END Checkbox -->
+    <slot></slot>
   </li>
 </template>
