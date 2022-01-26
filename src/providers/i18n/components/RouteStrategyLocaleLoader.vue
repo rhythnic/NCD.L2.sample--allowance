@@ -32,4 +32,4 @@
   }
 </script>
 
-<template><slot></slot>></template>
+<template><slot></slot></template>

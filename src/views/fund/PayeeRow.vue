@@ -35,8 +35,8 @@
 <template>
   <slot
     :amount="balance"
-    :action-status="setBalanceAction.status"
-    :action-error="setBalanceAction.error"
+    :action-status="setBalanceAction.status.value"
+    :action-error="setBalanceAction.error.value"
     :handle-set-balance="handleSetBalance"
   ></slot>
 </template>

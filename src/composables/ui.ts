@@ -34,7 +34,7 @@ const defaultUseActionOptions = {
 
 export function useAction(opts: UseActionOptions = defaultUseActionOptions) {
   const status = ref<ActionStatus>(ActionStatus.Ready);
-  const error = ref<Error | null>(null);
+  const error = ref<Error | undefined>();
 
   function track(promise: Promise<any>): Promise<any> {
     status.value = ActionStatus.Running;
@@ -56,7 +56,7 @@ export function useAction(opts: UseActionOptions = defaultUseActionOptions) {
 
   function reset(): void {
     status.value = ActionStatus.Ready;
-    error.value = null;
+    error.value = undefined;
   }
 
   return {

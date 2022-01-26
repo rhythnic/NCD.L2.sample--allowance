@@ -63,6 +63,7 @@
     :title="t('actions.transferMoney')"
     :confirm-label="t('actions.transfer')"
     :cancel-label="t('actions.cancel')"
+    :disable-confirm="!state.recipient || !state.amount"
     @confirm="handleConfirm"
     @cancel="emit('close')"
   >

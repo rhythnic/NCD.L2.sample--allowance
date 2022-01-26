@@ -1,6 +1,6 @@
 import { render, fireEvent } from "@testing-library/vue";
 import ActionDialog from "@/components/ActionDialog.vue";
-import { setupIntersectionObserverMock } from "./intersection-observer-mock";
+import { setupIntersectionObserverMock } from "@/test-helpers/intersection-observer-mock";
 
 const cancelLabel = "CANCEL_TEST";
 const confirmLabel = "CONFIRM_TEST";

@@ -41,7 +41,7 @@
   const deleteAction = useAction();
 
   onMounted(async () => {
-    const result = await loadAction.track(props.fund.getPayees());
+    const result = await loadAction.track(props.fund.getPayeeIndex());
     setPayeeIndex(result);
   });
 

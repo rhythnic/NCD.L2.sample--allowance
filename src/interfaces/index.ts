@@ -39,16 +39,16 @@ export enum UserRole {
 export interface FundContract {
   contractId: string;
   getFund: () => Promise<FundCore>;
-  getPayers: () => Promise<string[]>;
-  getPayees: () => Promise<string[]>;
+  getPayerIndex: () => Promise<string[]>;
+  getPayeeIndex: () => Promise<string[]>;
   getPayer: (accountId: string) => Promise<PayerPayeeCore>;
   getPayee: (accountId: string) => Promise<PayerPayeeCore>;
   createPayers: (accountIds: string[], balance: string) => Promise<void>;
   createPayees: (accountIds: string[], balance: string) => Promise<void>;
   deletePayers: (accountIds: string[]) => Promise<void>;
   deletePayees: (accountIds: string[]) => Promise<void>;
-  setUnrestrictedBalance: (amount: string) => Promise<void>;
-  setPayerBalance: (accountId: string, amount: string) => Promise<void>;
+  setUnrestrictedBalance: (balance: string) => Promise<void>;
+  setPayerBalance: (accountId: string, balance: string) => Promise<void>;
   setPayeeBalance: (accountId: string, amount: string) => Promise<void>;
   transfer: (recipient: string, amount: string) => Promise<void>;
   depositMoney: (amount: string) => Promise<void>;

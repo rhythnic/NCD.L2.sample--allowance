@@ -57,6 +57,7 @@
   },
   "wallet": {
     "signIn": "Sign In",
+    "signInSuccess": "Sign in successful",
     "signOut": "Sign out",
     "signInPrompt": "Sign in with NEAR Wallet to get started",
     "supported": "Supported Wallets"

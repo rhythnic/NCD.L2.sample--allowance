@@ -10,7 +10,7 @@
   import { RouteRecordName, useRoute, useRouter } from "vue-router";
   import { Wallet } from "@/interfaces";
   import Alert from "@/components/Alert.vue";
-  import NearTransactionDetector from "@/providers/near/components/NearTransactionDetector.vue";
+  import UrlSearchDetector from '@/components/UrlSearchDetector.vue';
   import RouteStrategyLocaleLoader from "@/providers/i18n/components/RouteStrategyLocaleLoader.vue";
   import Header from "./Header.vue";
 
@@ -50,13 +50,21 @@
   <main class="grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <router-view></router-view>
 
-      <NearTransactionDetector>
-        <template v-slot:default="slotProps">
-          <Alert :model-value="slotProps.transactionDetected" :ttl="3000" @update:model-value="slotProps.setTransactionDetected">
-            {{ t("app.transactionSucceeded") }}
-          </Alert>
-        </template>
-      </NearTransactionDetector>
+    <UrlSearchDetector :params="['transactionHashes']">
+      <template v-slot:default="slotProps">
+        <Alert :model-value="slotProps.paramFound" :ttl="3000" @update:model-value="slotProps.setParamFound">
+          {{ t("app.transactionSucceeded") }}
+        </Alert>
+      </template>
+    </UrlSearchDetector>
+
+    <UrlSearchDetector :params="['account_id']">
+      <template v-slot:default="slotProps">
+        <Alert :model-value="slotProps.paramFound" :ttl="3000" @update:model-value="slotProps.setParamFound">
+          {{ t("wallet.signInSuccess") }}
+        </Alert>
+      </template>
+    </UrlSearchDetector>
   </main>
 
   <RouteStrategyLocaleLoader :locale="(route.params.locale as string)" />

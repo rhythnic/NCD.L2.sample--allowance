@@ -16,8 +16,8 @@ export class FundContractNear implements FundContract {
       const contract = new Contract(config.wallet.account(), contractId, {
         viewMethods: [
           "get_fund",
-          "get_payers",
-          "get_payees",
+          "get_payer_index",
+          "get_payee_index",
           "get_payer",
           "get_payee",
         ],
@@ -55,12 +55,12 @@ export class FundContractNear implements FundContract {
     };
   }
 
-  getPayers(): Promise<string[]> {
-    return this.contract.get_payers();
+  getPayerIndex(): Promise<string[]> {
+    return this.contract.get_payer_index();
   }
 
-  getPayees(): Promise<string[]> {
-    return this.contract.get_payees();
+  getPayeeIndex(): Promise<string[]> {
+    return this.contract.get_payee_index();
   }
 
   async getPayer(accountId: string): Promise<PayerPayeeCore> {
@@ -113,30 +113,30 @@ export class FundContractNear implements FundContract {
     return this.contract.delete_payees({ accountIds }, this.config.gas);
   }
 
-  setUnrestrictedBalance(amount: string): Promise<void> {
+  setUnrestrictedBalance(balance: string): Promise<void> {
     return this.contract.set_unrestricted_balance(
       {
-        amount: utils.format.parseNearAmount(amount),
+        balance: utils.format.parseNearAmount(balance),
       },
       this.config.gas,
     );
   }
 
-  setPayerBalance(accountId: string, amount: string): Promise<void> {
+  setPayerBalance(accountId: string, balance: string): Promise<void> {
     return this.contract.set_payer_balance(
       {
         accountId,
-        amount: utils.format.parseNearAmount(amount),
+        balance: utils.format.parseNearAmount(balance),
       },
       this.config.gas,
     );
   }
 
-  setPayeeBalance(accountId: string, amount: string): Promise<void> {
+  setPayeeBalance(accountId: string, balance: string): Promise<void> {
     return this.contract.set_payee_balance(
       {
         accountId,
-        amount: utils.format.parseNearAmount(amount),
+        balance: utils.format.parseNearAmount(balance),
       },
       this.config.gas,
     );

@@ -80,6 +80,7 @@ declare module "vue-i18n" {
 
     wallet: {
       signIn: string;
+      signInSuccess: string;
       signOut: string;
       signInPrompt: string;
       supported: string;

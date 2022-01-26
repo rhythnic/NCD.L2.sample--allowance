@@ -37,7 +37,7 @@
   const deleteAction = useAction();
 
   onMounted(async () => {
-    const result = await loadAction.track(props.fund.getPayers());
+    const result = await loadAction.track(props.fund.getPayerIndex());
     setPayerIndex(result);
   });
 
@@ -96,8 +96,8 @@
               <AmountWidget
                 :amount="slotProps.amount"
                 :show-actions="userIsOwner"
-                :action-status="deleteAction.status"
-                :action-error="deleteAction.error"
+                :action-status="deleteAction.status.value"
+                :action-error="deleteAction.error.value"
                 :title="t('payer.setBalance')"
                 :confirm-label="t('actions.set')"
                 :input-label="t('account.amount')"

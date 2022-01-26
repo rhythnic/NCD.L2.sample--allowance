@@ -15,7 +15,7 @@ export class FundRegistryContractNear implements FundRegistryContract {
   ): (contractId: string) => FundRegistryContractNear {
     return (contractId) => {
       const contract = new Contract(config.wallet.account(), contractId, {
-        viewMethods: ["get_funds"],
+        viewMethods: ["get_fund_index"],
         changeMethods: ["create_fund", "delete_fund"],
       });
 
@@ -30,7 +30,7 @@ export class FundRegistryContractNear implements FundRegistryContract {
   ) {}
 
   getFundIndex(owner: string): Promise<string[]> {
-    return this.contract.get_funds({ owner });
+    return this.contract.get_fund_index({ owner });
   }
 
   createFund(subaccount: string): Promise<void> {

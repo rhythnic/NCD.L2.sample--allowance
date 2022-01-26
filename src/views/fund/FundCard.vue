@@ -80,8 +80,8 @@
           <AmountWidget
             :amount="availableBalance"
             :show-actions="userIsOwner"
-            :action-status="setBalanceAction.status"
-            :action-error="setBalanceAction.error"
+            :action-status="depositAction.status.value"
+            :action-error="depositAction.error.value"
             :title="t('fund.depositMoney')"
             :confirm-label="t('actions.transfer')"
             :input-label="t('account.amount')"
@@ -97,7 +97,8 @@
           <AmountWidget
             :amount="unrestrictedBalance"
             :show-actions="userIsOwner"
-            :status="setBalanceAction"
+            :action-status="setBalanceAction.status.value"
+            :action-error="setBalanceAction.error.value"
             :title="t('fund.setUnrestrictedBalance')"
             :confirm-label="t('actions.set')"
             :input-label="t('account.amount')"

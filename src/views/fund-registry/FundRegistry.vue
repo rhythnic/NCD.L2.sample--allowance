@@ -31,13 +31,13 @@
   ) as buildFundRegistryContractType;
 
   const loadAction = useAction();
-  const fundIndex = ref([]);
+  const fundIndex = ref<string[]>([]);
 
-  const fundRegistry = buildFundRegistryContract(contractId);
+  const fundRegistry = buildFundRegistryContract(contractId); 
 
   onMounted(async () => {
     fundIndex.value = await loadAction.track(
-      fundRegistry.getFundIndex(wallet.getAccountId()),
+      fundRegistry.getFundIndex(wallet.getAccountId())
     );
   });
 </script>

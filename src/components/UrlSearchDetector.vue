@@ -1,5 +1,5 @@
 <!-- 
-  TxResultAlert
+  UrlSearchDetector
   After the user approves a transaction in NEAR Wallet and is redirected back to the app,
   there is a transaction hash in the url search.  This component detects the hash in the url,
   and emits an event.
@@ -11,36 +11,33 @@
 <script setup lang="ts">
   import { onMounted, ref } from "vue";
   import { useRoute } from 'vue-router';
-  // import { provider, wallet } from "../near-service";
+
+  const props = defineProps<{
+    params: string[]
+  }>();
 
   const route = useRoute();
 
-  const transactionDetected = ref(false);
+  const paramFound = ref(false);
 
   onMounted(async () => {
     // when using WebHashHistory, route.query is empty even when transactionHashes is present
     const parsedUrl = new URL(window.location.href);
-    const transactionHashes = parsedUrl.searchParams.get("transactionHashes");
-    if (!transactionHashes) return;
+    const foundParams = props.params.map(name => parsedUrl.searchParams.get(name)).filter(value => value);
+    // const transactionHashes = parsedUrl.searchParams.get("transactionHashes");
+    if (!foundParams.length) return;
 
-    // fetch transaction
-    // await provider.txStatus(transactionHashes as string, wallet.getAccountId());
-
-    handleTransactionComplete();
-  });
-
-  function handleTransactionComplete() {
-    transactionDetected.value = true;
+    paramFound.value = true;
     // vue router already sees query as empty, so it doesn't respond to setting it to empty object
     // using window.history as a workaround
     window.history.replaceState({}, document.title, "/#" + route.path);
-  }
+  });
 
-  function handleSetTransactionDetected(detected: boolean) {
-    transactionDetected.value = detected;
+  function handleSetParamFound(detected: boolean) {
+    paramFound.value = detected;
   }
 </script>
 
 <template>
-  <slot :transaction-detected="transactionDetected" :set-transactionDetected="handleSetTransactionDetected"></slot>
+  <slot :param-found="paramFound" :set-param-found="handleSetParamFound"></slot>
 </template>

@@ -5,7 +5,7 @@
 -->
 
 <script setup lang="ts">
-  import { reactive } from "vue";
+  import { reactive, computed } from "vue";
   import { useI18n } from "vue-i18n";
   import { UserAddIcon } from "@heroicons/vue/solid";
   import { useState } from "@/composables/ui";
@@ -31,6 +31,10 @@
 
   const state = reactive({ ...initialState });
 
+  const disableConfirm = computed(() => {
+    return !state.accountsToAdd.length || !state.balance || isNaN(state.balance);
+  });
+
   function handleConfirm() {
     emit("add-accounts", state.accountsToAdd, state.balance);
   }
@@ -54,7 +58,7 @@
     :open="dialogOpen"
     :confirm-label="t('actions.add')"
     :cancel-label="t('actions.cancel')"
-    :disable-confirm="!state.accountsToAdd.length"
+    :disable-confirm="disableConfirm"
     @cancel="handleCancel"
     @confirm="handleConfirm"
     @done="handleCancel"

@@ -5,13 +5,14 @@
 -->
 
 <script setup lang="ts">
-  import { ref } from "vue";
+  import { ref, computed } from "vue";
   import { useI18n } from "vue-i18n";
   import { SelectorIcon } from "@heroicons/vue/solid";
   import ActionDialog from "@/components/ActionDialog.vue";
   import IconButton from "@/components/IconButton.vue";
   import NearAmount from "@/providers/near/components/NearAmount.vue";
   import NearInput from "@/providers/near/components/NearInput.vue";
+  import { ActionStatus } from "../../composables/ui";
 
   const { t } = useI18n({
     useScope: "global",
@@ -24,6 +25,9 @@
     helpText?: string;
     showActions: boolean;
     inputLabel: string;
+    title: string;
+    actionStatus?: ActionStatus;
+    actionError?: Error;
   }>();
 
   const emit = defineEmits<{
@@ -32,6 +36,12 @@
 
   const isOpen = ref(false);
   const inputAmount = ref(props.amount);
+
+  const disableConfirm = computed(() => {
+    return !inputAmount.value || isNaN(inputAmount.value) || inputAmount.value === props.amount;
+  })
+
+  const inputAmountIsNaN = computed(() => isNaN(parseFloat(inputAmount.value)));
 
   function initSetBalance() {
     inputAmount.value = "";
@@ -52,12 +62,13 @@
   </div>
   <ActionDialog
     v-if="showActions"
-    v-bind="$attrs"
-    :title="($attrs.title as string)"
+    :title="title"
+    :action-status="actionStatus"
+    :action-error="actionError"
     :open="isOpen"
     :confirm-label="confirmLabel"
     :cancel-label="t('actions.cancel')"
-    :disable-confirm="!inputAmount || inputAmount === amount"
+    :disable-confirm="disableConfirm"
     @confirm="emit('set-amount', inputAmount)"
     @cancel="handleCancel"
     @done="handleCancel"

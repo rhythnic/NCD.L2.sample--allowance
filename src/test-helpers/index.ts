@@ -18,6 +18,7 @@ export function renderView(component: Component, opts: RenderOptions = {}) {
   return render(component, {
     ...opts,
     global: {
+      ...(opts.global || {}),
       plugins: [...(opts.global?.plugins || []), createI18n(vueI18nOptions)],
       provide: { ...(opts.global?.provide || {}), contractId }
     },
