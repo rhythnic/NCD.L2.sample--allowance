@@ -1,3 +1,7 @@
+/**
+ * Implementation of the FundContract interface for NEAR
+ */
+
 import { utils, Contract, WalletConnection } from "near-api-js";
 import { FundContract, FundCore, PayerPayeeCore } from "@/interfaces";
 import BN from "bn.js";

@@ -1,5 +1,5 @@
 <!--
-  TestListInput
+  TextListInput
   An input that maintains a list of strings
   Has one text field for inputing the strings
 -->

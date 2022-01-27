@@ -1,10 +1,6 @@
 <!--
   PayerList
-  Container to provide payer-context to AccountList in slot
-
-  *views FundContract#getPayers
-  *calls FundContract#createPayers
-  *calls FundContract#deletePayers
+  Show a list of payers.  Support create and delete payers.
 -->
 
 <script setup lang="ts">
@@ -12,7 +8,7 @@
   import { useI18n } from "vue-i18n";
   import { FundContract } from "@/interfaces";
   import { useState, useAction } from "@/composables/ui";
-  import SelectableListHeader from "@/components/SelectableListHeader.vue";
+  import EditableListHeader from "@/components/EditableListHeader.vue";
   import Checkbox from '@/components/Checkbox.vue';
   import AccountAddWidget from "./AccountAddWidget.vue";
   import AccountRemoveWidget from "./AccountRemoveWidget.vue";
@@ -60,7 +56,7 @@
 <template>
   <section>
     <!-- List header -->
-    <SelectableListHeader
+    <EditableListHeader
       :title="t('payer.payer', 2)"
       :model-value="editMode"
       @update:model-value="handleSetEdit"
@@ -84,7 +80,7 @@
       <template slot:viewModeContent>
         <span>{{ t("account.balance") }}</span>
       </template>
-    </SelectableListHeader>
+    </EditableListHeader>
     <div class="flow-root">
       <ul role="list" class="divide-y divide-gray-200">
         <PayerRow

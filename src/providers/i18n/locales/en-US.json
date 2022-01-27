@@ -41,8 +41,11 @@
   "i18n": {
     "language": "Language"
   },
-  "nav": {
-    "learn": "Learn"
+  "learn": {
+    "learn": "Learn",
+    "learnToBuildNearDapps": "Learn how to build NEAR dapps",
+    "madeForNcd": "This dapp was built for NEAR Certified Developer II certifcation.",
+    "nearEduTeachesNear": "NEAR University teaches you how to build on NEAR."
   },
   "payee": {
     "payee": "Payee | Payees",

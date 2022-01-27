@@ -1,8 +1,6 @@
 <!--
   TransferDialog
   User inputs a recipient and an amount.  If recipient is passed as prop, the input is disabled.
-
-  *calls FundContract#transfer
 -->
 
 <script setup lang="ts">

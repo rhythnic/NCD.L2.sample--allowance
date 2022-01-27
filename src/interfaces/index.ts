@@ -1,6 +1,6 @@
 /**
  * Application Interfaces
- * The near provider implements these interfaces
+ * Blockchain providers must implement these interfaces
  */
 
 export interface Wallet {

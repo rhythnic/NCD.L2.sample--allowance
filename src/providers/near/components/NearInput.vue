@@ -1,3 +1,8 @@
+<!-- 
+  NearInput
+  Text input the contains "NEAR" svg
+ -->
+
 <script setup lang="ts">
   import NearTypeSvg from "./NearTypeSvg.vue";
   const props = defineProps<{

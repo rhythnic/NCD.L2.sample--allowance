@@ -1,7 +1,7 @@
 import { Component } from "vue";
 import { render, RenderOptions } from "@testing-library/vue";
 import { createI18n } from 'vue-i18n'
-import { vueI18nOptions } from '@/providers/i18n/settings';
+import { vueI18nOptions } from '../providers/i18n/settings';
 
 export const contractId = 'unittest.testnet'
 

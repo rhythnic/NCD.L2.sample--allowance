@@ -1,10 +1,6 @@
 <!--
   FundCard
   Shows fund info and state, the contract available balance and the fund's unrestricted balance
-
-  *views Account#availableBalance
-  *calls FundContract#depositMoney
-  *calls FundContract#setUnrestrictedBalance
 -->
 
 <script setup lang="ts">

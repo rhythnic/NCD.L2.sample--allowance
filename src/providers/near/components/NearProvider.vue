@@ -1,9 +1,6 @@
 <!-- 
-  App
-  Top-level component for the application.
-  The component tree is designed to make it easier to support multiple blockchains.
-  This component provides NEAR protocol implementations of services that implement the interfaces defined in src/models.
-  Child components can inject these services without being aware of which blockchain is being used.
+  Near Provider
+  Injects NEAR services and configuration
 -->
 
 <script setup lang="ts">

@@ -1,8 +1,6 @@
 <!--
   Fund Page
   Shows fund card, payer list, and payee list
-
-  *views FundContract#getFund
 -->
 
 <script setup lang="ts">

@@ -1,6 +1,6 @@
 <!--
-  SelectableListHeader
-  Used for Payer/Payee lists.  Header with action buttons.
+  EditableListHeader
+  Used for Payer/Payee lists and list of funds.  Header with action buttons.
 -->
 
 <script setup lang="ts">
@@ -26,7 +26,7 @@
       <EditButton
         class="ml-6"
         :active="modelValue"
-        @click="emit('update:modelValue', !modelValued)"
+        @click="emit('update:modelValue', !modelValue)"
       />
     </div>
     <!-- Actions -->

@@ -12,12 +12,7 @@
     ListboxOption,
   } from "@headlessui/vue";
   import { CheckIcon, SelectorIcon } from "@heroicons/vue/solid";
-  import { supportedLanguages } from "../settings";
-
-  interface Language {
-    locale: string;
-    name: string;
-  }
+  import { Language, supportedLanguages } from "../settings";
 
   const props = defineProps<{
     selectedLocale: string;

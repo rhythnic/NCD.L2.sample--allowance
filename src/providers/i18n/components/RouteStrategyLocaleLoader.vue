@@ -1,7 +1,6 @@
 <!--
-  LocaleContainer
-  All routes are nested under a :locale parameter in the route path
-  This component watches the :locale param and instructs i18n to update the locale
+  RouteStrategyLocaleLoader
+  Watches the :locale route param and loads the locale messages
 -->
 
 <script setup lang="ts">

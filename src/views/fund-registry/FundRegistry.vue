@@ -1,6 +1,6 @@
 <!--
   FundRegistry Page
-  Display navigation to the user's funds, and show button to create fund.
+  Display navigation to the user's funds, support creating and deleting funds
 
   *views FundRegistryContract#getFundIndex
 -->
@@ -12,27 +12,25 @@
   import { useState, useAction, ActionStatus } from "@/composables/ui";
   import Loading from "@/components/Loading.vue";
   import ErrorMessage from "@/components/ErrorMessage.vue";
-  import SelectableListHeader from '@/components/SelectableListHeader.vue';
+  import EditableListHeader from '@/components/EditableListHeader.vue';
   import ActionDialog from "../../components/ActionDialog.vue";
   import DeleteButton from "../../components/DeleteButton.vue";
-  import SelectableListRow from '@/components/SelectableListRow.vue';
   import CreateFundWidget from "./CreateFundWidget.vue";
-
-  const { t } = useI18n({
-    useScope: "global",
-    inheritLocale: true,
-  });
 
   const contractId = inject("contractId") as string;
   const wallet = inject("wallet") as Wallet;
+  const buildFundRegistryContract = inject(
+    "buildFundRegistryContract",
+  ) as buildFundRegistryContractType;
 
   defineProps<{
     locale: string;
   }>();
 
-  const buildFundRegistryContract = inject(
-    "buildFundRegistryContract",
-  ) as buildFundRegistryContractType;
+  const { t } = useI18n({
+    useScope: "global",
+    inheritLocale: true,
+  });
 
   const [editMode, setEditMode] = useState(false);
   const [fundToDelete, setFundToDelete] = useState('');
@@ -63,11 +61,11 @@
     <!-- Centered White Panel -->
     <div class="bg-white rounded-lg w-full sm:w-10/12 lg:w-6/12">
       <!-- Header -->
-      <SelectableListHeader :title="t('fund.fund', 2)" v-model="editMode">
+      <EditableListHeader :title="t('fund.fund', 2)" v-model="editMode">
         <template v-slot:editModeContent>
           <CreateFundWidget :fund-registry="fundRegistry" />
         </template>
-      </SelectableListHeader>
+      </EditableListHeader>
       <!-- END Header -->
       <!-- Loading -->
       <div v-if="loadAction.status.value === ActionStatus.LongRunning">
@@ -114,8 +112,8 @@
     :title="t('fund.confirmDelete')"
     :confirm-label="t('actions.delete')"
     :cancel-label="t('actions.cancel')"
-    :action-status="deleteFundAction.status"
-    :action-error="deleteFundAction.error"
+    :action-status="deleteFundAction.status.value"
+    :action-error="deleteFundAction.error.value"
     @cancel="handleCancelDeleteFund"
     @confirm="handleConfirmDeleteFund"
     @done="handleCancelDeleteFund"

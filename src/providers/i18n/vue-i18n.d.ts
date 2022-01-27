@@ -60,8 +60,11 @@ declare module "vue-i18n" {
       language: string;
     };
 
-    nav: {
+    learn: {
       learn: string;
+      learnToBuildNearDapps: string;
+      madeForNcd: string;
+      nearEduTeachesNear: string;
     };
 
     payee: {

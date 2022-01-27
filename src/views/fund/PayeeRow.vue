@@ -1,9 +1,6 @@
 <!--
   PayeeRow
   Container that provides payee-context to the AccountRow in the slot
-
-  *views fund.getPayee
-  *calls fund.setPayeeBalance
 -->
 
 <script setup lang="ts">

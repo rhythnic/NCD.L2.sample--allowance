@@ -13,10 +13,6 @@
     accountIds: string[];
   }>();
 
-  const emit = defineEmits<{
-    (e: "confirm"): void;
-  }>();
-
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { t } = useI18n({

@@ -1,7 +1,5 @@
 <!--
-  Layout
-  Layout is rendered by the main App component at src/near-app/App.vue
-  Layout watches the route and redirects to /home if the user is not signed in
+  Application Layout
 -->
 
 <script setup lang="ts">

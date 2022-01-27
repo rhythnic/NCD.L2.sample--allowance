@@ -1,5 +1,5 @@
 /**
- * Entrypoint for the application
+ * == APPLICATION ENTRY POINT =================================================
  */
 
 // import Buffer to allow for unbundled development with near-js-api

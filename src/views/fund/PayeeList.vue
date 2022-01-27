@@ -1,10 +1,6 @@
 <!--
   PayeeList
-  Container to provide payee-context to AccountList in slot
-
-  *views FundContract#getPayees
-  *calls FundContract#createPayees
-  *calls FundContract#deletePayees
+  Show a list of payees.  Support create and delete payees.
 -->
 
 <script setup lang="ts">
@@ -20,7 +16,7 @@
   import PayeeRow from "./PayeeRow.vue";
   import AmountWidget from "./AmountWidget.vue";
   import TransferDialog from "./TransferDialog.vue";
-  import SelectableListHeader from '@/components/SelectableListHeader.vue';
+  import EditableListHeader from '@/components/EditableListHeader.vue';
 
   const { t } = useI18n({
     useScope: "global",
@@ -68,7 +64,7 @@
 <template>
   <section>
     <!-- List header -->
-    <SelectableListHeader
+    <EditableListHeader
       :title="t('payee.payee', 2)"
       :model-value="editMode"
       @update:model-value="handleSetEdit"
@@ -92,7 +88,7 @@
       <template slot:viewModeContent>
         <span>{{ t("account.balance") }}</span>
       </template>
-    </SelectableListHeader>
+    </EditableListHeader>
     <div class="flow-root">
       <ul role="list" class="divide-y divide-gray-200">
         <PayeeRow

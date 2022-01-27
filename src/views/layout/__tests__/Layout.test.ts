@@ -14,14 +14,21 @@ const App = {
   template: '<router-view></router-view>'
 }
 
-const Home = {
+const EmptyComponent = {
   name: 'home',
   template: '<div></div>'
 }
 
 const routes = [
   { path: '/', redirect: `/${locale}` },
-  { path: '/:locale', component: Layout, children: [{ name: 'home', path: '', component: Home }]}
+  {
+    path: '/:locale',
+    component: Layout,
+    children: [
+      { name: 'home', path: '', component: EmptyComponent },
+      { name: 'learn', path: 'learn', component: EmptyComponent }
+    ]
+  },
 ]
 
 function renderLayout(plugins: any[], provide: any) {

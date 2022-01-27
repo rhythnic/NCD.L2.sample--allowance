@@ -1,3 +1,7 @@
+/**
+ * Implementation of the Account interface for NEAR
+ */
+
 import { Near, utils, Account as NearApiJsAccount } from "near-api-js";
 import { Account } from "@/interfaces";
 

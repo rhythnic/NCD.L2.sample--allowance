@@ -11,7 +11,7 @@
   import { useState } from "@/composables/ui";
   import AddButton from "@/components/AddButton.vue";
   import ActionDialog from "@/components/ActionDialog.vue";
-  import TestListInput from "@/components/TestListInput.vue";
+  import TextListInput from "@/components/TextListInput.vue";
   import NearInput from "@/providers/near/components/NearInput.vue";
 
   defineProps<{
@@ -32,7 +32,7 @@
   const state = reactive({ ...initialState });
 
   const disableConfirm = computed(() => {
-    return !state.accountsToAdd.length || !state.balance || isNaN(state.balance);
+    return !state.accountsToAdd.length || !state.balance || isNaN(parseFloat(state.balance));
   });
 
   function handleConfirm() {
@@ -63,7 +63,7 @@
     @confirm="handleConfirm"
     @done="handleCancel"
   >
-    <TestListInput
+    <TextListInput
       class="mt-4"
       :label="t('account.id')"
       :placeholder="t('account.id')"
@@ -73,7 +73,7 @@
       <template v-slot:addBtnIcon>
         <UserAddIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
       </template>
-    </TestListInput>
+    </TextListInput>
     <NearInput
       class="mt-4"
       :label="t('account.initialBalance')"

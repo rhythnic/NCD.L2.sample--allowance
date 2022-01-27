@@ -40,8 +40,11 @@
   "i18n": {
     "language": "국어"
   },
-  "nav": {
-    "learn": "배우기"
+  "learn": {
+    "learn": "배우기",
+    "learnToBuildNearDapps": "NEAR 앱 만들는 것을 배우기",
+    "madeForNcd": "이 앱은 NEAR NCD II 증명서들 받도록 만들게 됐어",
+    "nearEduTeachesNear": "NEAR 대학교는 NEAR 엡을 만들는 것을 가르친다."
   },
   "payee": {
     "payee": "수취인 | 수취인들",

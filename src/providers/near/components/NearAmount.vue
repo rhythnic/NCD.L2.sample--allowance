@@ -1,3 +1,8 @@
+<!-- 
+  NearAmount
+  Display an amount next to the Near Icon
+ -->
+
 <script setup lang="ts">
   import NearIconSvg from "./NearIconSvg.vue";
   defineProps<{

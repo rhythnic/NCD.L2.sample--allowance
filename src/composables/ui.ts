@@ -1,5 +1,5 @@
 /**
- * Composables for common UI state
+ * Composables for common UI patterns
  */
 
 import { ref, readonly, Ref, DeepReadonly } from "vue";

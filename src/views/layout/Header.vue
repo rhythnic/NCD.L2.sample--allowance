@@ -37,7 +37,7 @@
     inheritLocale: true,
   });
 
-  const authNotRequiredNavigation = [{ label: "nav.learn", to: { name: 'learn' } }];
+  const authNotRequiredNavigation = [{ label: "learn.learn", to: { name: 'learn' } }];
 </script>
 
 <template>

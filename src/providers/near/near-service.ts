@@ -1,6 +1,5 @@
 /**
  * NEAR Service
- * Also exports factory functions for creating Contracts for the fund registry and funds
  */
 
 import { Near, WalletConnection, providers } from "near-api-js";

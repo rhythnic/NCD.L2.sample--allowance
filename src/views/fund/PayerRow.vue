@@ -1,9 +1,6 @@
 <!--
   PayerRow
   Container that provides payer-context to the AccountRow in the slot
-
-  *views fund.getPayer
-  *calls fund.setPayerBalance
 -->
 
 <script setup lang="ts">
